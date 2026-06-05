@@ -24,3 +24,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/traveltech.png
+    - assets/icons/apple.png
+    - assets/icons/google.png

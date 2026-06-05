@@ -9,7 +9,7 @@ import 'package:guide_manager/features/profile/presentation/profile_page.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
-    initialLocation: AppRoute.excursions.path,
+    initialLocation: AppRoute.login.path,
     routes: [
       GoRoute(
         path: AppRoute.login.path,
