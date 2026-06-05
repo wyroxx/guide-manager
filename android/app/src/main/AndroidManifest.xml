@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="guide_manager"
+        android:label="Guide Manager"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

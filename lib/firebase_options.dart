@@ -70,6 +70,6 @@ class DefaultFirebaseOptions {
     messagingSenderId: '551338757670',
     projectId: 'tourapp-66e02',
     storageBucket: 'tourapp-66e02.firebasestorage.app',
-    iosBundleId: 'com.example.guideManager',
+    iosBundleId: 'com.traveltech.guideManager',
   );
 }
