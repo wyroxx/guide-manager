@@ -184,8 +184,8 @@ abstract final class AppTheme {
     ),
     titleMedium: TextStyle(
       color: AppColors.textPrimary,
-      fontSize: 18,
-      fontWeight: FontWeight.w600,
+      fontSize: 20,
+      fontWeight: FontWeight.w500,
     ),
     titleSmall: TextStyle(
       color: AppColors.textPrimary,
@@ -212,7 +212,7 @@ abstract final class AppTheme {
     ),
     labelLarge: TextStyle(
       color: AppColors.textPrimary,
-      fontSize: 16,
+      fontSize: 17,
       fontWeight: FontWeight.w600,
     ),
     labelMedium: TextStyle(
@@ -241,7 +241,7 @@ abstract final class AppColors {
 
   static const Color border = Color(0xFF45444D);
 
-  static const Color textPrimary = Color(0xFFF5F5F7);
+  static const Color textPrimary = Colors.white;
   static const Color textSecondary = Color(0xFFD0CDD7);
   static const Color textMuted = Color(0xFFA19EAA);
 
