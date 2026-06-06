@@ -9,7 +9,7 @@ part of 'excursion.dart';
 _Excursion _$ExcursionFromJson(Map<String, dynamic> json) => _Excursion(
   title: json['title'] as String,
   startsDate: const TimestampConverter().fromJson(
-    json['startsDate'] as Timestamp,
+    json['startDate'] as Timestamp,
   ),
   endDate: const TimestampConverter().fromJson(json['endDate'] as Timestamp),
   route: json['route'] as String,
@@ -33,7 +33,7 @@ _Excursion _$ExcursionFromJson(Map<String, dynamic> json) => _Excursion(
 Map<String, dynamic> _$ExcursionToJson(_Excursion instance) =>
     <String, dynamic>{
       'title': instance.title,
-      'startsDate': const TimestampConverter().toJson(instance.startsDate),
+      'startDate': const TimestampConverter().toJson(instance.startsDate),
       'endDate': const TimestampConverter().toJson(instance.endDate),
       'route': instance.route,
       'meetingPlace': instance.meetingPlace,

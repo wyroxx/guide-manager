@@ -69,7 +69,7 @@ excursions/{docId}
   excursionType: string
   maxParticipants: int64
   paymentStatus: "paid" | "unpaid"
-  startsDate: timestamp
+  startDate: timestamp
   endDate: timestamp
   route: string
   meetingPlace: string

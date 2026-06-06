@@ -48,7 +48,7 @@ abstract final class AppTheme {
         surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppRadius.card),
-          side: const BorderSide(color: AppColors.border),
+          side: const BorderSide(color: AppColors.border, width: 1.5),
         ),
       ),
 
@@ -189,8 +189,8 @@ abstract final class AppTheme {
     ),
     titleSmall: TextStyle(
       color: AppColors.textPrimary,
-      fontSize: 16,
-      fontWeight: FontWeight.w600,
+      fontSize: 17,
+      fontWeight: FontWeight.w500,
     ),
     bodyLarge: TextStyle(
       color: AppColors.textSecondary,

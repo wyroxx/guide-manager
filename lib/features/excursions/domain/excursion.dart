@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:guide_manager/features/excursions/data/timestamp_converter.dart';
 
@@ -8,7 +9,9 @@ part 'excursion.g.dart';
 abstract class Excursion with _$Excursion {
   const factory Excursion({
     required String title,
-    @TimestampConverter() required DateTime startsDate,
+    @JsonKey(name: 'startDate')
+    @TimestampConverter()
+    required DateTime startsDate,
     @TimestampConverter() required DateTime endDate,
     required String route,
     required String meetingPlace,
@@ -28,5 +31,6 @@ abstract class Excursion with _$Excursion {
       _$ExcursionFromJson(json);
 }
 
-enum GuideLevel { junior, middle, senior }
+enum GuideLevel { trainee, junior, middle, senior }
+
 enum PaymentStatus { paid, unpaid }

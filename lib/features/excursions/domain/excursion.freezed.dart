@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Excursion {
 
- String get title;@TimestampConverter() DateTime get startsDate;@TimestampConverter() DateTime get endDate; String get route; String get meetingPlace; bool get hasSpots; int get requiredGuides; bool get hasLunch; bool get hasMasterclass; List<GuideLevel> get requiredLevels; String get companyId; List<String> get assignedGuides; int get maxParticipants; String get excursionType; PaymentStatus get paymentStatus;
+ String get title;@JsonKey(name: 'startDate')@TimestampConverter() DateTime get startsDate;@TimestampConverter() DateTime get endDate; String get route; String get meetingPlace; bool get hasSpots; int get requiredGuides; bool get hasLunch; bool get hasMasterclass; List<GuideLevel> get requiredLevels; String get companyId; List<String> get assignedGuides; int get maxParticipants; String get excursionType; PaymentStatus get paymentStatus;
 /// Create a copy of Excursion
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $ExcursionCopyWith<$Res>  {
   factory $ExcursionCopyWith(Excursion value, $Res Function(Excursion) _then) = _$ExcursionCopyWithImpl;
 @useResult
 $Res call({
- String title,@TimestampConverter() DateTime startsDate,@TimestampConverter() DateTime endDate, String route, String meetingPlace, bool hasSpots, int requiredGuides, bool hasLunch, bool hasMasterclass, List<GuideLevel> requiredLevels, String companyId, List<String> assignedGuides, int maxParticipants, String excursionType, PaymentStatus paymentStatus
+ String title,@JsonKey(name: 'startDate')@TimestampConverter() DateTime startsDate,@TimestampConverter() DateTime endDate, String route, String meetingPlace, bool hasSpots, int requiredGuides, bool hasLunch, bool hasMasterclass, List<GuideLevel> requiredLevels, String companyId, List<String> assignedGuides, int maxParticipants, String excursionType, PaymentStatus paymentStatus
 });
 
 
@@ -167,7 +167,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String title, @TimestampConverter()  DateTime startsDate, @TimestampConverter()  DateTime endDate,  String route,  String meetingPlace,  bool hasSpots,  int requiredGuides,  bool hasLunch,  bool hasMasterclass,  List<GuideLevel> requiredLevels,  String companyId,  List<String> assignedGuides,  int maxParticipants,  String excursionType,  PaymentStatus paymentStatus)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String title, @JsonKey(name: 'startDate')@TimestampConverter()  DateTime startsDate, @TimestampConverter()  DateTime endDate,  String route,  String meetingPlace,  bool hasSpots,  int requiredGuides,  bool hasLunch,  bool hasMasterclass,  List<GuideLevel> requiredLevels,  String companyId,  List<String> assignedGuides,  int maxParticipants,  String excursionType,  PaymentStatus paymentStatus)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Excursion() when $default != null:
 return $default(_that.title,_that.startsDate,_that.endDate,_that.route,_that.meetingPlace,_that.hasSpots,_that.requiredGuides,_that.hasLunch,_that.hasMasterclass,_that.requiredLevels,_that.companyId,_that.assignedGuides,_that.maxParticipants,_that.excursionType,_that.paymentStatus);case _:
@@ -188,7 +188,7 @@ return $default(_that.title,_that.startsDate,_that.endDate,_that.route,_that.mee
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String title, @TimestampConverter()  DateTime startsDate, @TimestampConverter()  DateTime endDate,  String route,  String meetingPlace,  bool hasSpots,  int requiredGuides,  bool hasLunch,  bool hasMasterclass,  List<GuideLevel> requiredLevels,  String companyId,  List<String> assignedGuides,  int maxParticipants,  String excursionType,  PaymentStatus paymentStatus)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String title, @JsonKey(name: 'startDate')@TimestampConverter()  DateTime startsDate, @TimestampConverter()  DateTime endDate,  String route,  String meetingPlace,  bool hasSpots,  int requiredGuides,  bool hasLunch,  bool hasMasterclass,  List<GuideLevel> requiredLevels,  String companyId,  List<String> assignedGuides,  int maxParticipants,  String excursionType,  PaymentStatus paymentStatus)  $default,) {final _that = this;
 switch (_that) {
 case _Excursion():
 return $default(_that.title,_that.startsDate,_that.endDate,_that.route,_that.meetingPlace,_that.hasSpots,_that.requiredGuides,_that.hasLunch,_that.hasMasterclass,_that.requiredLevels,_that.companyId,_that.assignedGuides,_that.maxParticipants,_that.excursionType,_that.paymentStatus);case _:
@@ -208,7 +208,7 @@ return $default(_that.title,_that.startsDate,_that.endDate,_that.route,_that.mee
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String title, @TimestampConverter()  DateTime startsDate, @TimestampConverter()  DateTime endDate,  String route,  String meetingPlace,  bool hasSpots,  int requiredGuides,  bool hasLunch,  bool hasMasterclass,  List<GuideLevel> requiredLevels,  String companyId,  List<String> assignedGuides,  int maxParticipants,  String excursionType,  PaymentStatus paymentStatus)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String title, @JsonKey(name: 'startDate')@TimestampConverter()  DateTime startsDate, @TimestampConverter()  DateTime endDate,  String route,  String meetingPlace,  bool hasSpots,  int requiredGuides,  bool hasLunch,  bool hasMasterclass,  List<GuideLevel> requiredLevels,  String companyId,  List<String> assignedGuides,  int maxParticipants,  String excursionType,  PaymentStatus paymentStatus)?  $default,) {final _that = this;
 switch (_that) {
 case _Excursion() when $default != null:
 return $default(_that.title,_that.startsDate,_that.endDate,_that.route,_that.meetingPlace,_that.hasSpots,_that.requiredGuides,_that.hasLunch,_that.hasMasterclass,_that.requiredLevels,_that.companyId,_that.assignedGuides,_that.maxParticipants,_that.excursionType,_that.paymentStatus);case _:
@@ -223,11 +223,11 @@ return $default(_that.title,_that.startsDate,_that.endDate,_that.route,_that.mee
 @JsonSerializable()
 
 class _Excursion implements Excursion {
-  const _Excursion({required this.title, @TimestampConverter() required this.startsDate, @TimestampConverter() required this.endDate, required this.route, required this.meetingPlace, required this.hasSpots, required this.requiredGuides, required this.hasLunch, required this.hasMasterclass, required final  List<GuideLevel> requiredLevels, required this.companyId, required final  List<String> assignedGuides, required this.maxParticipants, required this.excursionType, required this.paymentStatus}): _requiredLevels = requiredLevels,_assignedGuides = assignedGuides;
+  const _Excursion({required this.title, @JsonKey(name: 'startDate')@TimestampConverter() required this.startsDate, @TimestampConverter() required this.endDate, required this.route, required this.meetingPlace, required this.hasSpots, required this.requiredGuides, required this.hasLunch, required this.hasMasterclass, required final  List<GuideLevel> requiredLevels, required this.companyId, required final  List<String> assignedGuides, required this.maxParticipants, required this.excursionType, required this.paymentStatus}): _requiredLevels = requiredLevels,_assignedGuides = assignedGuides;
   factory _Excursion.fromJson(Map<String, dynamic> json) => _$ExcursionFromJson(json);
 
 @override final  String title;
-@override@TimestampConverter() final  DateTime startsDate;
+@override@JsonKey(name: 'startDate')@TimestampConverter() final  DateTime startsDate;
 @override@TimestampConverter() final  DateTime endDate;
 @override final  String route;
 @override final  String meetingPlace;
@@ -287,7 +287,7 @@ abstract mixin class _$ExcursionCopyWith<$Res> implements $ExcursionCopyWith<$Re
   factory _$ExcursionCopyWith(_Excursion value, $Res Function(_Excursion) _then) = __$ExcursionCopyWithImpl;
 @override @useResult
 $Res call({
- String title,@TimestampConverter() DateTime startsDate,@TimestampConverter() DateTime endDate, String route, String meetingPlace, bool hasSpots, int requiredGuides, bool hasLunch, bool hasMasterclass, List<GuideLevel> requiredLevels, String companyId, List<String> assignedGuides, int maxParticipants, String excursionType, PaymentStatus paymentStatus
+ String title,@JsonKey(name: 'startDate')@TimestampConverter() DateTime startsDate,@TimestampConverter() DateTime endDate, String route, String meetingPlace, bool hasSpots, int requiredGuides, bool hasLunch, bool hasMasterclass, List<GuideLevel> requiredLevels, String companyId, List<String> assignedGuides, int maxParticipants, String excursionType, PaymentStatus paymentStatus
 });
 
 
