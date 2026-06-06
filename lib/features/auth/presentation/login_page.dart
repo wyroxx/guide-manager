@@ -31,7 +31,27 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     } on AuthException catch (e) {
       if (mounted) {
         showAppToast(context, message: e.message, type: AppToastType.error);
-      }  
+      }
+    }
+  }
+
+  Future<void> _loginWithGoogle() async {
+    try {
+      await ref.read(authRepositoryProvider).loginWithGoogle();
+    } on AuthException catch (e) {
+      if (mounted) {
+        showAppToast(context, message: e.message, type: AppToastType.error);
+      }
+    }
+  }
+
+  Future<void> _loginWithApple() async {
+    try {
+      await ref.read(authRepositoryProvider).loginWithApple();
+    } on AuthException catch (e) {
+      if (mounted) {
+        showAppToast(context, message: e.message, type: AppToastType.error);
+      }
     }
   }
 
@@ -128,7 +148,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     child: Material(
                       color: Colors.transparent,
                       child: InkWell(
-                        onTap: () {},
+                        onTap: () async => await _loginWithGoogle(),
                         child: Ink.image(
                           image: const AssetImage('assets/icons/google.png'),
                           height: 50,
@@ -144,7 +164,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     child: Material(
                       color: Colors.transparent,
                       child: InkWell(
-                        onTap: () {},
+                        onTap: () async => await _loginWithApple(),
                         child: Ink.image(
                           image: const AssetImage('assets/icons/apple.png'),
                           height: 50,

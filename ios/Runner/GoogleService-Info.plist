@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CLIENT_ID</key>
+	<string>551338757670-2nc6lpffpb5cc8lgm9qc6hu2rj1bqqui.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.551338757670-2nc6lpffpb5cc8lgm9qc6hu2rj1bqqui</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>551338757670-6t6ddgtkot2ci7srllunlbl4pig33gnq.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
 	<string>AIzaSyCUElNAVky8lIcZLBDPKOdc-irdlMVVQKU</string>
 	<key>GCM_SENDER_ID</key>
@@ -9,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.guideManager</string>
+	<string>com.traveltech.guideManager</string>
 	<key>PROJECT_ID</key>
 	<string>tourapp-66e02</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:551338757670:ios:0903df1645fcb8ee3ee0e7</string>
+	<string>1:551338757670:ios:9316df14c8e662633ee0e7</string>
 </dict>
 </plist>
