@@ -7,12 +7,25 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:551338757670:android:bd13b55d9b0a74ae3ee0e7",
+        "mobilesdk_app_id": "1:551338757670:android:abd35ace9d25215b3ee0e7",
         "android_client_info": {
-          "package_name": "com.example.guide_manager"
+          "package_name": "com.traveltech.guideManager"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "551338757670-6t6ddgtkot2ci7srllunlbl4pig33gnq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.traveltech.guideManager",
+            "certificate_hash": "abab86bedf8e591d7443338f0bb837c1815307b4"
+          }
+        },
+        {
+          "client_id": "551338757670-d9utslpjelbphnajq9fa9gnlhi9n4elf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyClK8UnzBHBISfOu0IfBL0MD2hOsOCNGQQ"
@@ -20,26 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:551338757670:android:6dc287422c2d064a3ee0e7",
-        "android_client_info": {
-          "package_name": "com.traveltech.tour_guide_manager"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyClK8UnzBHBISfOu0IfBL0MD2hOsOCNGQQ"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "551338757670-d9utslpjelbphnajq9fa9gnlhi9n4elf.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "551338757670-2nc6lpffpb5cc8lgm9qc6hu2rj1bqqui.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.traveltech.guideManager"
+              }
+            }
+          ]
         }
       }
     }

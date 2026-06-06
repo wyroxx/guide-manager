@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:guide_manager/core/utils/router_refresh_stream.dart';
 import 'package:guide_manager/features/applications/presentation/applications_page.dart';
 import 'package:guide_manager/features/auth/presentation/login_page.dart';
 import 'package:guide_manager/features/auth/presentation/register_page.dart';
@@ -9,7 +11,28 @@ import 'package:guide_manager/features/profile/presentation/profile_page.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
-    initialLocation: AppRoute.excursions.path,
+    initialLocation: AppRoute.login.path,
+    redirect: (context, state) {
+      final user = FirebaseAuth.instance.currentUser;
+
+      final isLoggedIn = user != null;
+      final isAuthRoute =
+          state.matchedLocation == AppRoute.login.path ||
+          state.matchedLocation == AppRoute.register.path;
+
+      if (!isLoggedIn && !isAuthRoute) {
+        return AppRoute.login.path;
+      }
+
+      if (isLoggedIn && isAuthRoute) {
+        return AppRoute.excursions.path;
+      }
+
+      return null;
+    },
+    refreshListenable: GoRouterRefreshStream(
+      FirebaseAuth.instance.authStateChanges(),
+    ),
     routes: [
       GoRoute(
         path: AppRoute.login.path,
@@ -72,10 +95,7 @@ enum AppRoute {
 }
 
 class AppShell extends StatelessWidget {
-  const AppShell({
-    required this.navigationShell,
-    super.key,
-  });
+  const AppShell({required this.navigationShell, super.key});
 
   final StatefulNavigationShell navigationShell;
 
@@ -95,10 +115,7 @@ class AppShell extends StatelessWidget {
             icon: Icon(Icons.notifications),
             label: 'Applications',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
       ),
     );

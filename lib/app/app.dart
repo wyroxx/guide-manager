@@ -12,10 +12,11 @@ class GuideApp extends ConsumerWidget {
 
     return MaterialApp.router(
       title: 'Guide Manager',
-      theme: AppTheme.light,
+      theme: AppTheme.dark,
       darkTheme: AppTheme.dark,
       themeMode: ThemeMode.system,
       routerConfig: router,
+      debugShowCheckedModeBanner: false,
     );
   }
 }

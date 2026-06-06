@@ -47,18 +47,18 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDiT_WPPU_qZd_Lx2evYwJs4laoHwCHBng',
-    appId: '1:551338757670:web:38794bc88ad9bdc03ee0e7',
+    apiKey: 'AIzaSyDMo2rJlrv4750wzpaRQm8JpNSvhjNDiBs',
+    appId: '1:551338757670:web:58a764b1a4ff65603ee0e7',
     messagingSenderId: '551338757670',
     projectId: 'tourapp-66e02',
     authDomain: 'tourapp-66e02.firebaseapp.com',
     storageBucket: 'tourapp-66e02.firebasestorage.app',
-    measurementId: 'G-08SX79DMX1',
+    measurementId: 'G-LF2S5Z33MZ',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyClK8UnzBHBISfOu0IfBL0MD2hOsOCNGQQ',
-    appId: '1:551338757670:android:bd13b55d9b0a74ae3ee0e7',
+    appId: '1:551338757670:android:abd35ace9d25215b3ee0e7',
     messagingSenderId: '551338757670',
     projectId: 'tourapp-66e02',
     storageBucket: 'tourapp-66e02.firebasestorage.app',
@@ -66,10 +66,13 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyCUElNAVky8lIcZLBDPKOdc-irdlMVVQKU',
-    appId: '1:551338757670:ios:0903df1645fcb8ee3ee0e7',
+    appId: '1:551338757670:ios:9316df14c8e662633ee0e7',
     messagingSenderId: '551338757670',
     projectId: 'tourapp-66e02',
     storageBucket: 'tourapp-66e02.firebasestorage.app',
-    iosBundleId: 'com.example.guideManager',
+    androidClientId: '551338757670-6t6ddgtkot2ci7srllunlbl4pig33gnq.apps.googleusercontent.com',
+    iosClientId: '551338757670-2nc6lpffpb5cc8lgm9qc6hu2rj1bqqui.apps.googleusercontent.com',
+    iosBundleId: 'com.traveltech.guideManager',
   );
+
 }
