@@ -52,6 +52,7 @@ Map<String, dynamic> _$ExcursionToJson(_Excursion instance) =>
     };
 
 const _$GuideLevelEnumMap = {
+  GuideLevel.trainee: 'trainee',
   GuideLevel.junior: 'junior',
   GuideLevel.middle: 'middle',
   GuideLevel.senior: 'senior',

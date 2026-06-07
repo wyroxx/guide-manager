@@ -18,7 +18,7 @@ class _ExcursionsPageState extends ConsumerState<ExcursionsPage> {
   DateTime _selectedDate = DateUtils.dateOnly(DateTime.now());
   @override
   Widget build(BuildContext context) {
-    final provider = excursionProvider(_selectedDate);
+    final provider = excursionsProvider(_selectedDate);
     final excursionsAsync = ref.watch(provider);
     return Scaffold(
       appBar: AppBar(title: const Text('Мои экскурсии')),

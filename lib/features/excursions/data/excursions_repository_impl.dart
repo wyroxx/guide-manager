@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:guide_manager/core/enums.dart';
 import 'package:guide_manager/features/excursions/domain/excursion.dart';
 import 'package:guide_manager/features/excursions/domain/excursions_repository.dart';
 
@@ -8,7 +9,7 @@ final excursionsRepositoryProvider = Provider<ExcursionsRepository>((ref) {
   return ExcursionsRepositoryImpl();
 });
 
-final excursionProvider = FutureProvider.family<List<Excursion>, DateTime>((
+final excursionsProvider = FutureProvider.family<List<Excursion>, DateTime>((
   ref,
   date,
 ) async {
@@ -28,6 +29,11 @@ class ExcursionsRepositoryImpl implements ExcursionsRepository {
   Future<List<Excursion>> getExcursions(DateTime date) async {
     final email = _auth.currentUser?.email;
     if (email == null || email.isEmpty) {
+      return [];
+    }
+
+    final level = await _getGuideLevel(email);
+    if (level == null) {
       return [];
     }
 
@@ -54,9 +60,45 @@ class ExcursionsRepositoryImpl implements ExcursionsRepository {
         )
         .get();
 
-    final excursions = snapshot.docs.map((doc) => doc.data()).toList()
-      ..sort((a, b) => a.startsDate.compareTo(b.startsDate));
+    final excursions =
+        snapshot.docs
+            .map((doc) => doc.data())
+            .where((excursion) => excursion.requiredLevels.contains(level))
+            .toList()
+          ..sort((a, b) => a.startsDate.compareTo(b.startsDate));
 
     return excursions;
+  }
+
+  Future<GuideLevel?> _getGuideLevel(String email) async {
+    final snapshot = await _firestore
+        .collection('guides')
+        .where('email', isEqualTo: email)
+        .limit(1)
+        .get();
+
+    if (snapshot.docs.isEmpty) {
+      return null;
+    }
+
+    final level = snapshot.docs.first.data()['level'];
+
+    if (level is! String) {
+      return null;
+    }
+
+    return GuideLevel.values.firstWhere(
+      (item) => _guideLeveltoString(item) == level,
+      orElse: () => GuideLevel.trainee,
+    );
+  }
+
+  String _guideLeveltoString(GuideLevel level) {
+    return switch (level) {
+      GuideLevel.trainee => 'trainee',
+      GuideLevel.junior => 'junior',
+      GuideLevel.middle => 'middle',
+      GuideLevel.senior => 'senior',
+    };
   }
 }

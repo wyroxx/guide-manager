@@ -36,3 +36,5 @@ flutter:
     - assets/icons/google.png
     - assets/images/error.svg
     - assets/images/empty_excursions.svg
+    - assets/images/avatar.svg
+    - assets/images/empty_profile.svg
