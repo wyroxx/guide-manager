@@ -66,12 +66,18 @@ companies/{docId}
 
 excursions/{docId}
   title: string
-  startsDate: timestamp
+  excursionType: string
+  maxParticipants: int64
+  paymentStatus: "paid" | "unpaid"
+  startDate: timestamp
   endDate: timestamp
   route: string
   meetingPlace: string
   hasSpots: boolean
-  requiredLevel: string
+  requiredGuides: int64
+  requiredLevels: string[]
+  hasLunch: boolean
+  hasMasterclass: boolean
   companyId: string
   assignedGuides: string[]
 

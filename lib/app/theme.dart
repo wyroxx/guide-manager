@@ -48,7 +48,7 @@ abstract final class AppTheme {
         surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppRadius.card),
-          side: const BorderSide(color: AppColors.border),
+          side: const BorderSide(color: AppColors.border, width: 1.5),
         ),
       ),
 
@@ -57,7 +57,7 @@ abstract final class AppTheme {
         elevation: 0,
         backgroundColor: AppColors.surface,
         selectedItemColor: AppColors.primary,
-        unselectedItemColor: AppColors.textMuted,
+        unselectedItemColor: AppColors.textSecondary,
         showSelectedLabels: true,
         showUnselectedLabels: true,
         selectedLabelStyle: TextStyle(
@@ -184,13 +184,13 @@ abstract final class AppTheme {
     ),
     titleMedium: TextStyle(
       color: AppColors.textPrimary,
-      fontSize: 18,
-      fontWeight: FontWeight.w600,
+      fontSize: 20,
+      fontWeight: FontWeight.w500,
     ),
     titleSmall: TextStyle(
       color: AppColors.textPrimary,
-      fontSize: 16,
-      fontWeight: FontWeight.w600,
+      fontSize: 17,
+      fontWeight: FontWeight.w500,
     ),
     bodyLarge: TextStyle(
       color: AppColors.textSecondary,
@@ -212,7 +212,7 @@ abstract final class AppTheme {
     ),
     labelLarge: TextStyle(
       color: AppColors.textPrimary,
-      fontSize: 16,
+      fontSize: 17,
       fontWeight: FontWeight.w600,
     ),
     labelMedium: TextStyle(
@@ -241,7 +241,7 @@ abstract final class AppColors {
 
   static const Color border = Color(0xFF45444D);
 
-  static const Color textPrimary = Color(0xFFF5F5F7);
+  static const Color textPrimary = Colors.white;
   static const Color textSecondary = Color(0xFFD0CDD7);
   static const Color textMuted = Color(0xFFA19EAA);
 
@@ -274,6 +274,6 @@ abstract final class AppRadius {
   static const double button = 16;
   static const double card = 16;
   static const double calendarTile = 12;
-  static const double bottomNav = 20;
+  static const double bottomNav = 24;
   static const double avatar = 999;
 }
