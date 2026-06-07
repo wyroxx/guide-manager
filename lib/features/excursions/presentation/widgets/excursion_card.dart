@@ -11,11 +11,11 @@ class ExcursionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     String additional = '';
     if (excursion.hasLunch && excursion.hasMasterclass) {
-      additional = 'Обед и мастеркласс включены';
+      additional = '\nОбед и мастеркласс включены';
     } else if (excursion.hasLunch) {
-      additional = 'Обед включен';
+      additional = '\nОбед включен';
     } else if (excursion.hasMasterclass) {
-      additional = 'Мастеркласс включен';
+      additional = '\nМастеркласс включен';
     }
     final timeRange = formatTimeRange(excursion.startsDate, excursion.endDate);
 
@@ -45,7 +45,7 @@ class ExcursionCard extends StatelessWidget {
             Text(
               'Место встречи: ${excursion.meetingPlace}\n'
               'Машрут: ${excursion.route}\n'
-              'Группа: ${excursion.maxParticipants} человек\n'
+              'Группа: ${excursion.maxParticipants} человек'
               '$additional',
               style: const TextStyle(height: 1.4),
             ),

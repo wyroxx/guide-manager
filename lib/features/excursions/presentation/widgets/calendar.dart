@@ -52,10 +52,10 @@ class _CalendarItem extends StatelessWidget {
     final String weekday = formattedDate.$2;
     return Container(
       decoration: BoxDecoration(
-        color: isSelected ? AppColors.primary : AppColors.surface,
+        color: isSelected ? AppColors.primaryDark : AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadius.calendarTile),
         border: Border.all(
-          color: isSelected ? AppColors.primary : AppColors.border,
+          color: isSelected ? AppColors.primaryDark : AppColors.border,
           width: 1.3,
         ),
       ),
