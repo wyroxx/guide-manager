@@ -34,3 +34,5 @@ flutter:
     - assets/images/traveltech.png
     - assets/icons/apple.png
     - assets/icons/google.png
+    - assets/images/error.svg
+    - assets/images/empty_excursions.svg

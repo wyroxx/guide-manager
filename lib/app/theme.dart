@@ -57,7 +57,7 @@ abstract final class AppTheme {
         elevation: 0,
         backgroundColor: AppColors.surface,
         selectedItemColor: AppColors.primary,
-        unselectedItemColor: AppColors.textMuted,
+        unselectedItemColor: AppColors.textSecondary,
         showSelectedLabels: true,
         showUnselectedLabels: true,
         selectedLabelStyle: TextStyle(
@@ -274,6 +274,6 @@ abstract final class AppRadius {
   static const double button = 16;
   static const double card = 16;
   static const double calendarTile = 12;
-  static const double bottomNav = 20;
+  static const double bottomNav = 24;
   static const double avatar = 999;
 }

@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:guide_manager/app/theme.dart';
 import 'package:guide_manager/core/utils/router_refresh_stream.dart';
 import 'package:guide_manager/features/applications/presentation/applications_page.dart';
 import 'package:guide_manager/features/auth/presentation/login_page.dart';
@@ -103,20 +104,38 @@ class AppShell extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: navigationShell,
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: navigationShell.currentIndex,
-        onTap: _onDestinationSelected,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
-            label: 'Excursions',
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          border: BoxBorder.all(width: 1.5, color: AppColors.border),
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(AppRadius.bottomNav),
+            topRight: Radius.circular(AppRadius.bottomNav),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'Applications',
+        ),
+        child: ClipRRect(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(AppRadius.bottomNav),
+            topRight: Radius.circular(AppRadius.bottomNav),
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-        ],
+          child: BottomNavigationBar(
+            currentIndex: navigationShell.currentIndex,
+            onTap: _onDestinationSelected,
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.calendar_today),
+                label: 'Календарь',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.notifications),
+                label: 'Заявки',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+                label: 'Профиль',
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

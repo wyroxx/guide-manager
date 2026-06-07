@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:guide_manager/app/theme.dart';
 import 'package:guide_manager/core/utils/date_formatter.dart';
 import 'package:guide_manager/features/excursions/data/excursions_repository_impl.dart';
 import 'package:guide_manager/features/excursions/presentation/widgets/calendar.dart';
@@ -16,7 +18,8 @@ class _ExcursionsPageState extends ConsumerState<ExcursionsPage> {
   DateTime _selectedDate = DateUtils.dateOnly(DateTime.now());
   @override
   Widget build(BuildContext context) {
-    final excursionsAsync = ref.watch(excursionProvider(_selectedDate));
+    final provider = excursionProvider(_selectedDate);
+    final excursionsAsync = ref.watch(provider);
     return Scaffold(
       appBar: AppBar(title: const Text('Мои экскурсии')),
       body: Column(
@@ -41,10 +44,19 @@ class _ExcursionsPageState extends ConsumerState<ExcursionsPage> {
           ),
           Expanded(
             child: excursionsAsync.when(
+              skipLoadingOnRefresh: false,
               data: (excursions) {
                 if (excursions.isEmpty) {
-                  return const Center(
-                    child: Text('На этот день экскурсий нет'),
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset('assets/images/empty_excursions.svg'),
+                      const SizedBox(height: 30),
+                      Text(
+                        'На этот день экскурсий нет',
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                    ],
                   );
                 }
 
@@ -58,14 +70,27 @@ class _ExcursionsPageState extends ConsumerState<ExcursionsPage> {
                   ),
                 );
               },
-              error: (error, stackTrace) => Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Text(
-                    'Не удалось загрузить экскурсии:\n$error',
-                    textAlign: TextAlign.center,
+              error: (error, stackTrace) => Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset('assets/images/error.svg'),
+                  const SizedBox(height: 35),
+                  Text(
+                    'Не удалось загрузить экскурсии',
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
-                ),
+                  TextButton(
+                    onPressed: () {
+                      ref.invalidate(provider);
+                    },
+                    child: Text(
+                      'Повторить',
+                      style: Theme.of(
+                        context,
+                      ).textTheme.titleSmall?.copyWith(color: AppColors.link),
+                    ),
+                  ),
+                ],
               ),
               loading: () => const Center(child: CircularProgressIndicator()),
             ),
