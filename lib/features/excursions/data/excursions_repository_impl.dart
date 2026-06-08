@@ -81,24 +81,7 @@ class ExcursionsRepositoryImpl implements ExcursionsRepository {
       return null;
     }
 
-    final level = snapshot.docs.first.data()['level'];
-
-    if (level is! String) {
-      return null;
-    }
-
-    return GuideLevel.values.firstWhere(
-      (item) => _guideLeveltoString(item) == level,
-      orElse: () => GuideLevel.trainee,
-    );
-  }
-
-  String _guideLeveltoString(GuideLevel level) {
-    return switch (level) {
-      GuideLevel.trainee => 'trainee',
-      GuideLevel.junior => 'junior',
-      GuideLevel.middle => 'middle',
-      GuideLevel.senior => 'senior',
-    };
+    final String level = snapshot.docs.first.data()['level'];
+    return GuideLevel.fromString(level);
   }
 }
