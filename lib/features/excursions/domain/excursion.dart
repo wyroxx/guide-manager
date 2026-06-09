@@ -10,6 +10,7 @@ part 'excursion.g.dart';
 @freezed
 abstract class Excursion with _$Excursion {
   const factory Excursion({
+    @JsonKey(includeToJson: false) required String id,
     required String title,
     @TimestampConverter() required DateTime startDate,
     @TimestampConverter() required DateTime endDate,

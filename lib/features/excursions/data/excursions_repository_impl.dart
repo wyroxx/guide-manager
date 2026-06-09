@@ -54,7 +54,7 @@ class ExcursionsRepositoryImpl implements ExcursionsRepository {
             if (data == null) {
               throw Exception('Document at ${snapshot.id} is empty');
             }
-            return Excursion.fromJson(data);
+            return Excursion.fromJson({...data, 'id': snapshot.id});
           },
           toFirestore: (excursion, _) => excursion.toJson(),
         )

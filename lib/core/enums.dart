@@ -32,9 +32,9 @@ enum PaymentStatus {
 }
 
 enum ApplicationStatus {
-  pending('pending', 'ожидает'),
-  accepted('accepted', 'принята'),
-  rejected('rejected', 'отклонена');
+  pending('pending', 'Ожидает'),
+  accepted('accepted', 'Принята'),
+  rejected('rejected', 'Отклонена');
 
   final String statusEng;
   final String statusRus;

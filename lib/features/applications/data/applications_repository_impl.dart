@@ -16,30 +16,30 @@ final myApplicationsProvider = StreamProvider<List<Excursion>>((ref) {
   return repository.watchMyApplications(guideEmail: email);
 });
 
-final availableExcursionsProvider = StreamProvider<List<Excursion>>(
-  (ref) async* {
-    final repository = ref.watch(applicationsRepositoryProvider);
-    final email = FirebaseAuth.instance.currentUser?.email;
+final availableExcursionsProvider = StreamProvider<List<Excursion>>((
+  ref,
+) async* {
+  final repository = ref.watch(applicationsRepositoryProvider);
+  final email = FirebaseAuth.instance.currentUser?.email;
 
-    if (email == null) {
-      yield const <Excursion>[];
-      return;
-    }
+  if (email == null) {
+    yield const <Excursion>[];
+    return;
+  }
 
-    final profileData = await ref.watch(profileDataProvider.future);
-    final level = profileData?.level;
+  final profileData = await ref.watch(profileDataProvider.future);
+  final level = profileData?.level;
 
-    if (level == null) {
-      yield const <Excursion>[];
-      return;
-    }
+  if (level == null) {
+    yield const <Excursion>[];
+    return;
+  }
 
-    yield* repository.watchAvailableExcursions(
-      guideEmail: email,
-      guideLevel: level,
-    );
-  },
-);
+  yield* repository.watchAvailableExcursions(
+    guideEmail: email,
+    guideLevel: level,
+  );
+});
 
 final applicationsRepositoryProvider = Provider<ApplicationsRepository>((ref) {
   return ApplicationsRepositoryImpl();
@@ -85,7 +85,7 @@ class ApplicationsRepositoryImpl implements ApplicationsRepository {
             if (data == null) {
               throw Exception('Document at ${snapshot.id} is empty');
             }
-            return Excursion.fromJson(data);
+            return Excursion.fromJson({...data, 'id': snapshot.id});
           },
           toFirestore: (excursion, _) => excursion.toJson(),
         )
@@ -158,9 +158,10 @@ class ApplicationsRepositoryImpl implements ApplicationsRepository {
       return null;
     }
 
-    return Excursion.fromJson(
-      excursionData,
-    ).copyWith(application: Application.fromJson(applicationData));
+    return Excursion.fromJson({
+      ...excursionData,
+      'id': excursionReference.id,
+    }).copyWith(application: Application.fromJson(applicationData));
   }
 
   Future<bool> _isGuideBlacklisted({

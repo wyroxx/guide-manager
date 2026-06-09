@@ -43,7 +43,11 @@ class ProfilePage extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Spacer(),
-                  SvgPicture.asset('assets/images/avatar.svg'),
+                  SvgPicture.asset(
+                    'assets/images/avatar.svg',
+                    height: 160,
+                    width: 160,
+                  ),
                   const SizedBox(height: 16),
                   Text(
                     profileData.name,

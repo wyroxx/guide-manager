@@ -3,15 +3,16 @@ import 'package:guide_manager/core/utils/date_formatter.dart';
 import 'package:guide_manager/features/excursions/domain/excursion.dart';
 
 class ApplicationCard extends StatelessWidget {
-  const ApplicationCard({super.key, required this.excursion});
+  const ApplicationCard({super.key, required this.excursion, this.onApply});
 
   final Excursion excursion;
+  final VoidCallback? onApply;
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -36,7 +37,7 @@ class ApplicationCard extends StatelessWidget {
             const SizedBox(width: 10),
             SizedBox(
               child: FilledButton(
-                onPressed: () {},
+                onPressed: onApply,
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 10,
@@ -44,9 +45,12 @@ class ApplicationCard extends StatelessWidget {
                   ),
                   minimumSize: const Size(0, 40),
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  disabledBackgroundColor: const Color(0xFF5A5863),
                 ),
                 child: Text(
-                  'Податься',
+                  onApply == null
+                      ? '${excursion.application?.status.statusRus}'
+                      : 'Податься',
                   style: Theme.of(
                     context,
                   ).textTheme.titleSmall?.copyWith(fontSize: 14),

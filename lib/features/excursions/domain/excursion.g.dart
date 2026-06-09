@@ -7,6 +7,7 @@ part of 'excursion.dart';
 // **************************************************************************
 
 _Excursion _$ExcursionFromJson(Map<String, dynamic> json) => _Excursion(
+  id: json['id'] as String,
   title: json['title'] as String,
   startDate: const TimestampConverter().fromJson(
     json['startDate'] as Timestamp,

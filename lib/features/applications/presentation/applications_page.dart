@@ -1,10 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:guide_manager/core/ui/empty_state.dart';
 import 'package:guide_manager/core/ui/error_state.dart';
 import 'package:guide_manager/core/ui/segmented_control.dart';
+import 'package:guide_manager/core/ui/snack_bar.dart';
 import 'package:guide_manager/features/applications/data/applications_repository_impl.dart';
 import 'package:guide_manager/features/applications/presentation/application_card.dart';
+import 'package:guide_manager/features/excursions/domain/excursion.dart';
 
 class ApplicationsPage extends ConsumerWidget {
   const ApplicationsPage({super.key});
@@ -25,8 +28,12 @@ class ApplicationsPage extends ConsumerWidget {
                   );
                 }
                 return ListView.separated(
-                  itemBuilder: (context, index) =>
-                      ApplicationCard(excursion: excursions[index]),
+                  itemBuilder: (context, index) => ApplicationCard(
+                    excursion: excursions[index],
+                    onApply: () async {
+                      await _applyToExcursion(context, ref, excursions[index]);
+                    },
+                  ),
                   separatorBuilder: (_, _) => const SizedBox(height: 10),
                   itemCount: excursions.length,
                 );
@@ -87,5 +94,44 @@ class ApplicationsPage extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _applyToExcursion(
+    BuildContext context,
+    WidgetRef ref,
+    Excursion excursion,
+  ) async {
+    final email = FirebaseAuth.instance.currentUser?.email;
+    if (email == null || email.isEmpty) {
+      showAppToast(
+        context,
+        message: 'Пользователь не авторизован',
+        type: AppToastType.error,
+      );
+      return;
+    }
+
+    try {
+      await ref
+          .read(applicationsRepositoryProvider)
+          .applyToExcursion(excursionId: excursion.id, guideEmail: email);
+
+      ref.invalidate(availableExcursionsProvider);
+      ref.invalidate(myApplicationsProvider);
+
+      if (!context.mounted) return;
+      showAppToast(
+        context,
+        message: 'Заявка отправлена',
+        type: AppToastType.success,
+      );
+    } catch (_) {
+      if (!context.mounted) return;
+      showAppToast(
+        context,
+        message: 'Не удалось отправить заявку',
+        type: AppToastType.error,
+      );
+    }
   }
 }

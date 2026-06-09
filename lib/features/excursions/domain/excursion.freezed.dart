@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Excursion {
 
- String get title;@TimestampConverter() DateTime get startDate;@TimestampConverter() DateTime get endDate; String get route; String get meetingPlace; bool get hasSpots; int get requiredGuides; bool get hasLunch; bool get hasMasterclass; List<GuideLevel> get requiredLevels; String get companyId; List<String> get assignedGuides; int get maxParticipants; String get excursionType; PaymentStatus get paymentStatus;@JsonKey(includeFromJson: false, includeToJson: false) Application? get application;
+@JsonKey(includeToJson: false) String get id; String get title;@TimestampConverter() DateTime get startDate;@TimestampConverter() DateTime get endDate; String get route; String get meetingPlace; bool get hasSpots; int get requiredGuides; bool get hasLunch; bool get hasMasterclass; List<GuideLevel> get requiredLevels; String get companyId; List<String> get assignedGuides; int get maxParticipants; String get excursionType; PaymentStatus get paymentStatus;@JsonKey(includeFromJson: false, includeToJson: false) Application? get application;
 /// Create a copy of Excursion
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ExcursionCopyWith<Excursion> get copyWith => _$ExcursionCopyWithImpl<Excursion>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Excursion&&(identical(other.title, title) || other.title == title)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&(identical(other.route, route) || other.route == route)&&(identical(other.meetingPlace, meetingPlace) || other.meetingPlace == meetingPlace)&&(identical(other.hasSpots, hasSpots) || other.hasSpots == hasSpots)&&(identical(other.requiredGuides, requiredGuides) || other.requiredGuides == requiredGuides)&&(identical(other.hasLunch, hasLunch) || other.hasLunch == hasLunch)&&(identical(other.hasMasterclass, hasMasterclass) || other.hasMasterclass == hasMasterclass)&&const DeepCollectionEquality().equals(other.requiredLevels, requiredLevels)&&(identical(other.companyId, companyId) || other.companyId == companyId)&&const DeepCollectionEquality().equals(other.assignedGuides, assignedGuides)&&(identical(other.maxParticipants, maxParticipants) || other.maxParticipants == maxParticipants)&&(identical(other.excursionType, excursionType) || other.excursionType == excursionType)&&(identical(other.paymentStatus, paymentStatus) || other.paymentStatus == paymentStatus)&&(identical(other.application, application) || other.application == application));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Excursion&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&(identical(other.route, route) || other.route == route)&&(identical(other.meetingPlace, meetingPlace) || other.meetingPlace == meetingPlace)&&(identical(other.hasSpots, hasSpots) || other.hasSpots == hasSpots)&&(identical(other.requiredGuides, requiredGuides) || other.requiredGuides == requiredGuides)&&(identical(other.hasLunch, hasLunch) || other.hasLunch == hasLunch)&&(identical(other.hasMasterclass, hasMasterclass) || other.hasMasterclass == hasMasterclass)&&const DeepCollectionEquality().equals(other.requiredLevels, requiredLevels)&&(identical(other.companyId, companyId) || other.companyId == companyId)&&const DeepCollectionEquality().equals(other.assignedGuides, assignedGuides)&&(identical(other.maxParticipants, maxParticipants) || other.maxParticipants == maxParticipants)&&(identical(other.excursionType, excursionType) || other.excursionType == excursionType)&&(identical(other.paymentStatus, paymentStatus) || other.paymentStatus == paymentStatus)&&(identical(other.application, application) || other.application == application));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,title,startDate,endDate,route,meetingPlace,hasSpots,requiredGuides,hasLunch,hasMasterclass,const DeepCollectionEquality().hash(requiredLevels),companyId,const DeepCollectionEquality().hash(assignedGuides),maxParticipants,excursionType,paymentStatus,application);
+int get hashCode => Object.hash(runtimeType,id,title,startDate,endDate,route,meetingPlace,hasSpots,requiredGuides,hasLunch,hasMasterclass,const DeepCollectionEquality().hash(requiredLevels),companyId,const DeepCollectionEquality().hash(assignedGuides),maxParticipants,excursionType,paymentStatus,application);
 
 @override
 String toString() {
-  return 'Excursion(title: $title, startDate: $startDate, endDate: $endDate, route: $route, meetingPlace: $meetingPlace, hasSpots: $hasSpots, requiredGuides: $requiredGuides, hasLunch: $hasLunch, hasMasterclass: $hasMasterclass, requiredLevels: $requiredLevels, companyId: $companyId, assignedGuides: $assignedGuides, maxParticipants: $maxParticipants, excursionType: $excursionType, paymentStatus: $paymentStatus, application: $application)';
+  return 'Excursion(id: $id, title: $title, startDate: $startDate, endDate: $endDate, route: $route, meetingPlace: $meetingPlace, hasSpots: $hasSpots, requiredGuides: $requiredGuides, hasLunch: $hasLunch, hasMasterclass: $hasMasterclass, requiredLevels: $requiredLevels, companyId: $companyId, assignedGuides: $assignedGuides, maxParticipants: $maxParticipants, excursionType: $excursionType, paymentStatus: $paymentStatus, application: $application)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ExcursionCopyWith<$Res>  {
   factory $ExcursionCopyWith(Excursion value, $Res Function(Excursion) _then) = _$ExcursionCopyWithImpl;
 @useResult
 $Res call({
- String title,@TimestampConverter() DateTime startDate,@TimestampConverter() DateTime endDate, String route, String meetingPlace, bool hasSpots, int requiredGuides, bool hasLunch, bool hasMasterclass, List<GuideLevel> requiredLevels, String companyId, List<String> assignedGuides, int maxParticipants, String excursionType, PaymentStatus paymentStatus,@JsonKey(includeFromJson: false, includeToJson: false) Application? application
+@JsonKey(includeToJson: false) String id, String title,@TimestampConverter() DateTime startDate,@TimestampConverter() DateTime endDate, String route, String meetingPlace, bool hasSpots, int requiredGuides, bool hasLunch, bool hasMasterclass, List<GuideLevel> requiredLevels, String companyId, List<String> assignedGuides, int maxParticipants, String excursionType, PaymentStatus paymentStatus,@JsonKey(includeFromJson: false, includeToJson: false) Application? application
 });
 
 
@@ -65,9 +65,10 @@ class _$ExcursionCopyWithImpl<$Res>
 
 /// Create a copy of Excursion
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? title = null,Object? startDate = null,Object? endDate = null,Object? route = null,Object? meetingPlace = null,Object? hasSpots = null,Object? requiredGuides = null,Object? hasLunch = null,Object? hasMasterclass = null,Object? requiredLevels = null,Object? companyId = null,Object? assignedGuides = null,Object? maxParticipants = null,Object? excursionType = null,Object? paymentStatus = null,Object? application = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? startDate = null,Object? endDate = null,Object? route = null,Object? meetingPlace = null,Object? hasSpots = null,Object? requiredGuides = null,Object? hasLunch = null,Object? hasMasterclass = null,Object? requiredLevels = null,Object? companyId = null,Object? assignedGuides = null,Object? maxParticipants = null,Object? excursionType = null,Object? paymentStatus = null,Object? application = freezed,}) {
   return _then(_self.copyWith(
-title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,startDate: null == startDate ? _self.startDate : startDate // ignore: cast_nullable_to_non_nullable
 as DateTime,endDate: null == endDate ? _self.endDate : endDate // ignore: cast_nullable_to_non_nullable
 as DateTime,route: null == route ? _self.route : route // ignore: cast_nullable_to_non_nullable
@@ -168,10 +169,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String title, @TimestampConverter()  DateTime startDate, @TimestampConverter()  DateTime endDate,  String route,  String meetingPlace,  bool hasSpots,  int requiredGuides,  bool hasLunch,  bool hasMasterclass,  List<GuideLevel> requiredLevels,  String companyId,  List<String> assignedGuides,  int maxParticipants,  String excursionType,  PaymentStatus paymentStatus, @JsonKey(includeFromJson: false, includeToJson: false)  Application? application)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id,  String title, @TimestampConverter()  DateTime startDate, @TimestampConverter()  DateTime endDate,  String route,  String meetingPlace,  bool hasSpots,  int requiredGuides,  bool hasLunch,  bool hasMasterclass,  List<GuideLevel> requiredLevels,  String companyId,  List<String> assignedGuides,  int maxParticipants,  String excursionType,  PaymentStatus paymentStatus, @JsonKey(includeFromJson: false, includeToJson: false)  Application? application)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Excursion() when $default != null:
-return $default(_that.title,_that.startDate,_that.endDate,_that.route,_that.meetingPlace,_that.hasSpots,_that.requiredGuides,_that.hasLunch,_that.hasMasterclass,_that.requiredLevels,_that.companyId,_that.assignedGuides,_that.maxParticipants,_that.excursionType,_that.paymentStatus,_that.application);case _:
+return $default(_that.id,_that.title,_that.startDate,_that.endDate,_that.route,_that.meetingPlace,_that.hasSpots,_that.requiredGuides,_that.hasLunch,_that.hasMasterclass,_that.requiredLevels,_that.companyId,_that.assignedGuides,_that.maxParticipants,_that.excursionType,_that.paymentStatus,_that.application);case _:
   return orElse();
 
 }
@@ -189,10 +190,10 @@ return $default(_that.title,_that.startDate,_that.endDate,_that.route,_that.meet
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String title, @TimestampConverter()  DateTime startDate, @TimestampConverter()  DateTime endDate,  String route,  String meetingPlace,  bool hasSpots,  int requiredGuides,  bool hasLunch,  bool hasMasterclass,  List<GuideLevel> requiredLevels,  String companyId,  List<String> assignedGuides,  int maxParticipants,  String excursionType,  PaymentStatus paymentStatus, @JsonKey(includeFromJson: false, includeToJson: false)  Application? application)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id,  String title, @TimestampConverter()  DateTime startDate, @TimestampConverter()  DateTime endDate,  String route,  String meetingPlace,  bool hasSpots,  int requiredGuides,  bool hasLunch,  bool hasMasterclass,  List<GuideLevel> requiredLevels,  String companyId,  List<String> assignedGuides,  int maxParticipants,  String excursionType,  PaymentStatus paymentStatus, @JsonKey(includeFromJson: false, includeToJson: false)  Application? application)  $default,) {final _that = this;
 switch (_that) {
 case _Excursion():
-return $default(_that.title,_that.startDate,_that.endDate,_that.route,_that.meetingPlace,_that.hasSpots,_that.requiredGuides,_that.hasLunch,_that.hasMasterclass,_that.requiredLevels,_that.companyId,_that.assignedGuides,_that.maxParticipants,_that.excursionType,_that.paymentStatus,_that.application);case _:
+return $default(_that.id,_that.title,_that.startDate,_that.endDate,_that.route,_that.meetingPlace,_that.hasSpots,_that.requiredGuides,_that.hasLunch,_that.hasMasterclass,_that.requiredLevels,_that.companyId,_that.assignedGuides,_that.maxParticipants,_that.excursionType,_that.paymentStatus,_that.application);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -209,10 +210,10 @@ return $default(_that.title,_that.startDate,_that.endDate,_that.route,_that.meet
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String title, @TimestampConverter()  DateTime startDate, @TimestampConverter()  DateTime endDate,  String route,  String meetingPlace,  bool hasSpots,  int requiredGuides,  bool hasLunch,  bool hasMasterclass,  List<GuideLevel> requiredLevels,  String companyId,  List<String> assignedGuides,  int maxParticipants,  String excursionType,  PaymentStatus paymentStatus, @JsonKey(includeFromJson: false, includeToJson: false)  Application? application)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeToJson: false)  String id,  String title, @TimestampConverter()  DateTime startDate, @TimestampConverter()  DateTime endDate,  String route,  String meetingPlace,  bool hasSpots,  int requiredGuides,  bool hasLunch,  bool hasMasterclass,  List<GuideLevel> requiredLevels,  String companyId,  List<String> assignedGuides,  int maxParticipants,  String excursionType,  PaymentStatus paymentStatus, @JsonKey(includeFromJson: false, includeToJson: false)  Application? application)?  $default,) {final _that = this;
 switch (_that) {
 case _Excursion() when $default != null:
-return $default(_that.title,_that.startDate,_that.endDate,_that.route,_that.meetingPlace,_that.hasSpots,_that.requiredGuides,_that.hasLunch,_that.hasMasterclass,_that.requiredLevels,_that.companyId,_that.assignedGuides,_that.maxParticipants,_that.excursionType,_that.paymentStatus,_that.application);case _:
+return $default(_that.id,_that.title,_that.startDate,_that.endDate,_that.route,_that.meetingPlace,_that.hasSpots,_that.requiredGuides,_that.hasLunch,_that.hasMasterclass,_that.requiredLevels,_that.companyId,_that.assignedGuides,_that.maxParticipants,_that.excursionType,_that.paymentStatus,_that.application);case _:
   return null;
 
 }
@@ -224,9 +225,10 @@ return $default(_that.title,_that.startDate,_that.endDate,_that.route,_that.meet
 @JsonSerializable()
 
 class _Excursion implements Excursion {
-  const _Excursion({required this.title, @TimestampConverter() required this.startDate, @TimestampConverter() required this.endDate, required this.route, required this.meetingPlace, required this.hasSpots, required this.requiredGuides, required this.hasLunch, required this.hasMasterclass, required final  List<GuideLevel> requiredLevels, required this.companyId, required final  List<String> assignedGuides, required this.maxParticipants, required this.excursionType, required this.paymentStatus, @JsonKey(includeFromJson: false, includeToJson: false) this.application}): _requiredLevels = requiredLevels,_assignedGuides = assignedGuides;
+  const _Excursion({@JsonKey(includeToJson: false) required this.id, required this.title, @TimestampConverter() required this.startDate, @TimestampConverter() required this.endDate, required this.route, required this.meetingPlace, required this.hasSpots, required this.requiredGuides, required this.hasLunch, required this.hasMasterclass, required final  List<GuideLevel> requiredLevels, required this.companyId, required final  List<String> assignedGuides, required this.maxParticipants, required this.excursionType, required this.paymentStatus, @JsonKey(includeFromJson: false, includeToJson: false) this.application}): _requiredLevels = requiredLevels,_assignedGuides = assignedGuides;
   factory _Excursion.fromJson(Map<String, dynamic> json) => _$ExcursionFromJson(json);
 
+@override@JsonKey(includeToJson: false) final  String id;
 @override final  String title;
 @override@TimestampConverter() final  DateTime startDate;
 @override@TimestampConverter() final  DateTime endDate;
@@ -269,16 +271,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Excursion&&(identical(other.title, title) || other.title == title)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&(identical(other.route, route) || other.route == route)&&(identical(other.meetingPlace, meetingPlace) || other.meetingPlace == meetingPlace)&&(identical(other.hasSpots, hasSpots) || other.hasSpots == hasSpots)&&(identical(other.requiredGuides, requiredGuides) || other.requiredGuides == requiredGuides)&&(identical(other.hasLunch, hasLunch) || other.hasLunch == hasLunch)&&(identical(other.hasMasterclass, hasMasterclass) || other.hasMasterclass == hasMasterclass)&&const DeepCollectionEquality().equals(other._requiredLevels, _requiredLevels)&&(identical(other.companyId, companyId) || other.companyId == companyId)&&const DeepCollectionEquality().equals(other._assignedGuides, _assignedGuides)&&(identical(other.maxParticipants, maxParticipants) || other.maxParticipants == maxParticipants)&&(identical(other.excursionType, excursionType) || other.excursionType == excursionType)&&(identical(other.paymentStatus, paymentStatus) || other.paymentStatus == paymentStatus)&&(identical(other.application, application) || other.application == application));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Excursion&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&(identical(other.route, route) || other.route == route)&&(identical(other.meetingPlace, meetingPlace) || other.meetingPlace == meetingPlace)&&(identical(other.hasSpots, hasSpots) || other.hasSpots == hasSpots)&&(identical(other.requiredGuides, requiredGuides) || other.requiredGuides == requiredGuides)&&(identical(other.hasLunch, hasLunch) || other.hasLunch == hasLunch)&&(identical(other.hasMasterclass, hasMasterclass) || other.hasMasterclass == hasMasterclass)&&const DeepCollectionEquality().equals(other._requiredLevels, _requiredLevels)&&(identical(other.companyId, companyId) || other.companyId == companyId)&&const DeepCollectionEquality().equals(other._assignedGuides, _assignedGuides)&&(identical(other.maxParticipants, maxParticipants) || other.maxParticipants == maxParticipants)&&(identical(other.excursionType, excursionType) || other.excursionType == excursionType)&&(identical(other.paymentStatus, paymentStatus) || other.paymentStatus == paymentStatus)&&(identical(other.application, application) || other.application == application));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,title,startDate,endDate,route,meetingPlace,hasSpots,requiredGuides,hasLunch,hasMasterclass,const DeepCollectionEquality().hash(_requiredLevels),companyId,const DeepCollectionEquality().hash(_assignedGuides),maxParticipants,excursionType,paymentStatus,application);
+int get hashCode => Object.hash(runtimeType,id,title,startDate,endDate,route,meetingPlace,hasSpots,requiredGuides,hasLunch,hasMasterclass,const DeepCollectionEquality().hash(_requiredLevels),companyId,const DeepCollectionEquality().hash(_assignedGuides),maxParticipants,excursionType,paymentStatus,application);
 
 @override
 String toString() {
-  return 'Excursion(title: $title, startDate: $startDate, endDate: $endDate, route: $route, meetingPlace: $meetingPlace, hasSpots: $hasSpots, requiredGuides: $requiredGuides, hasLunch: $hasLunch, hasMasterclass: $hasMasterclass, requiredLevels: $requiredLevels, companyId: $companyId, assignedGuides: $assignedGuides, maxParticipants: $maxParticipants, excursionType: $excursionType, paymentStatus: $paymentStatus, application: $application)';
+  return 'Excursion(id: $id, title: $title, startDate: $startDate, endDate: $endDate, route: $route, meetingPlace: $meetingPlace, hasSpots: $hasSpots, requiredGuides: $requiredGuides, hasLunch: $hasLunch, hasMasterclass: $hasMasterclass, requiredLevels: $requiredLevels, companyId: $companyId, assignedGuides: $assignedGuides, maxParticipants: $maxParticipants, excursionType: $excursionType, paymentStatus: $paymentStatus, application: $application)';
 }
 
 
@@ -289,7 +291,7 @@ abstract mixin class _$ExcursionCopyWith<$Res> implements $ExcursionCopyWith<$Re
   factory _$ExcursionCopyWith(_Excursion value, $Res Function(_Excursion) _then) = __$ExcursionCopyWithImpl;
 @override @useResult
 $Res call({
- String title,@TimestampConverter() DateTime startDate,@TimestampConverter() DateTime endDate, String route, String meetingPlace, bool hasSpots, int requiredGuides, bool hasLunch, bool hasMasterclass, List<GuideLevel> requiredLevels, String companyId, List<String> assignedGuides, int maxParticipants, String excursionType, PaymentStatus paymentStatus,@JsonKey(includeFromJson: false, includeToJson: false) Application? application
+@JsonKey(includeToJson: false) String id, String title,@TimestampConverter() DateTime startDate,@TimestampConverter() DateTime endDate, String route, String meetingPlace, bool hasSpots, int requiredGuides, bool hasLunch, bool hasMasterclass, List<GuideLevel> requiredLevels, String companyId, List<String> assignedGuides, int maxParticipants, String excursionType, PaymentStatus paymentStatus,@JsonKey(includeFromJson: false, includeToJson: false) Application? application
 });
 
 
@@ -306,9 +308,10 @@ class __$ExcursionCopyWithImpl<$Res>
 
 /// Create a copy of Excursion
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? title = null,Object? startDate = null,Object? endDate = null,Object? route = null,Object? meetingPlace = null,Object? hasSpots = null,Object? requiredGuides = null,Object? hasLunch = null,Object? hasMasterclass = null,Object? requiredLevels = null,Object? companyId = null,Object? assignedGuides = null,Object? maxParticipants = null,Object? excursionType = null,Object? paymentStatus = null,Object? application = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? startDate = null,Object? endDate = null,Object? route = null,Object? meetingPlace = null,Object? hasSpots = null,Object? requiredGuides = null,Object? hasLunch = null,Object? hasMasterclass = null,Object? requiredLevels = null,Object? companyId = null,Object? assignedGuides = null,Object? maxParticipants = null,Object? excursionType = null,Object? paymentStatus = null,Object? application = freezed,}) {
   return _then(_Excursion(
-title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,startDate: null == startDate ? _self.startDate : startDate // ignore: cast_nullable_to_non_nullable
 as DateTime,endDate: null == endDate ? _self.endDate : endDate // ignore: cast_nullable_to_non_nullable
 as DateTime,route: null == route ? _self.route : route // ignore: cast_nullable_to_non_nullable
