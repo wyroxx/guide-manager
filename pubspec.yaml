@@ -19,6 +19,7 @@ dependencies:
   flutter_svg: ^2.3.0
   cupertino_icons: ^1.0.9
   google_sign_in: ^7.2.0
+  flutter_launcher_icons: ^0.14.4
 
 dev_dependencies:
   build_runner: ^2.5.4
@@ -27,6 +28,14 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/launcher_icon.png"
+  web:
+    generate: true
+    image_path: "assets/icons/launcher_icon.png"
 
 flutter:
   uses-material-design: true
@@ -39,3 +48,4 @@ flutter:
     - assets/images/avatar.svg
     - assets/images/empty_profile.svg
     - assets/images/empty_applications.svg
+    - assets/icons/launcher_icon.png
