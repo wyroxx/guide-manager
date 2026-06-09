@@ -255,6 +255,10 @@ abstract final class AppColors {
   static const Color success = Color(0xFF22C55E);
   static const Color warning = Color(0xFFF59E0B);
 
+  static const Color accepted = Color(0xFF30D158);
+  static const Color rejected = Color(0xFFFF453A);
+  static const Color pending = Color(0xFF5A5863);
+
   static const Color disabled = Color(0xFF4A4850);
 }
 

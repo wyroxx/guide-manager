@@ -4,9 +4,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:guide_manager/core/enums.dart';
 import 'package:guide_manager/features/excursions/domain/excursion.dart';
 import 'package:guide_manager/features/excursions/domain/excursions_repository.dart';
+import 'package:guide_manager/features/profile/data/profile_repository_impl.dart';
 
 final excursionsRepositoryProvider = Provider<ExcursionsRepository>((ref) {
   return ExcursionsRepositoryImpl();
+});
+
+final guideLevelProvider = FutureProvider<GuideLevel?>((ref) async {
+  final profileData = await ref.watch(profileDataProvider.future);
+  return profileData?.level;
 });
 
 final excursionsProvider = FutureProvider.family<List<Excursion>, DateTime>((
@@ -14,7 +20,12 @@ final excursionsProvider = FutureProvider.family<List<Excursion>, DateTime>((
   date,
 ) async {
   final repository = ref.watch(excursionsRepositoryProvider);
-  return repository.getExcursions(date);
+  final guideLevel = await ref.watch(guideLevelProvider.future);
+  if (guideLevel == null) {
+    return [];
+  }
+
+  return repository.getExcursions(date: date, guideLevel: guideLevel);
 });
 
 class ExcursionsRepositoryImpl implements ExcursionsRepository {
@@ -26,14 +37,12 @@ class ExcursionsRepositoryImpl implements ExcursionsRepository {
   final FirebaseFirestore _firestore;
 
   @override
-  Future<List<Excursion>> getExcursions(DateTime date) async {
+  Future<List<Excursion>> getExcursions({
+    required DateTime date,
+    required GuideLevel guideLevel,
+  }) async {
     final email = _auth.currentUser?.email;
     if (email == null || email.isEmpty) {
-      return [];
-    }
-
-    final level = await _getGuideLevel(email);
-    if (level == null) {
       return [];
     }
 
@@ -63,25 +72,10 @@ class ExcursionsRepositoryImpl implements ExcursionsRepository {
     final excursions =
         snapshot.docs
             .map((doc) => doc.data())
-            .where((excursion) => excursion.requiredLevels.contains(level))
+            .where((excursion) => excursion.requiredLevels.contains(guideLevel))
             .toList()
           ..sort((a, b) => a.startDate.compareTo(b.startDate));
 
     return excursions;
-  }
-
-  Future<GuideLevel?> _getGuideLevel(String email) async {
-    final snapshot = await _firestore
-        .collection('guides')
-        .where('email', isEqualTo: email)
-        .limit(1)
-        .get();
-
-    if (snapshot.docs.isEmpty) {
-      return null;
-    }
-
-    final String level = snapshot.docs.first.data()['level'];
-    return GuideLevel.fromString(level);
   }
 }

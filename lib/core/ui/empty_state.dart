@@ -24,7 +24,7 @@ class AppEmptyState extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SvgPicture.asset(assetPath),
+          SvgPicture.asset(assetPath, width: 300),
           SizedBox(height: imageTitleSpacing),
           Text(
             title,

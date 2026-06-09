@@ -24,7 +24,9 @@ class ApplicationsPage extends ConsumerWidget {
               data: (excursions) {
                 if (excursions.isEmpty) {
                   return const AppEmptyState(
-                    title: 'Доступных экскурсий сейчас нет',
+                    assetPath: 'assets/images/empty_applications.svg',
+                    title: 'Нет доступных экскурсий',
+                    subtitle: 'Они скоро появятся',
                   );
                 }
                 return ListView.separated(
@@ -54,7 +56,11 @@ class ApplicationsPage extends ConsumerWidget {
             .when(
               data: (excursions) {
                 if (excursions.isEmpty) {
-                  return const AppEmptyState(title: 'Заявок нет');
+                  return const AppEmptyState(
+                    assetPath: 'assets/images/empty_applications.svg',
+                    title: 'Заявок пока нет',
+                    subtitle: 'Отправленные заявки появятся здесь',
+                  );
                 }
                 return ListView.separated(
                   itemBuilder: (context, index) =>

@@ -134,10 +134,20 @@ class ApplicationsRepositoryImpl implements ApplicationsRepository {
             snapshot.docs.map(_excursionFromApplication),
           );
 
-          return excursions.whereType<Excursion>().toList()..sort(
-            (a, b) =>
-                b.application!.createdAt.compareTo(a.application!.createdAt),
-          );
+          return excursions.whereType<Excursion>().toList()..sort((a, b) {
+            final applicationA = a.application!;
+            final applicationB = b.application!;
+
+            final statusCompare = applicationA.status.priority.compareTo(
+              applicationB.status.priority,
+            );
+
+            if (statusCompare != 0) {
+              return statusCompare;
+            }
+
+            return applicationB.createdAt.compareTo(applicationA.createdAt);
+          });
         });
   }
 

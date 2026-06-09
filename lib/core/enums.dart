@@ -38,7 +38,17 @@ enum ApplicationStatus {
 
   final String statusEng;
   final String statusRus;
+
+  int get priority {
+    return switch (this) {
+      ApplicationStatus.pending => 0,
+      ApplicationStatus.accepted => 1,
+      ApplicationStatus.rejected => 2,
+    };
+  }
+
   const ApplicationStatus(this.statusEng, this.statusRus);
+
   factory ApplicationStatus.fromString(String string) {
     switch (string) {
       case 'pending':

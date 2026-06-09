@@ -117,23 +117,29 @@ class AppShell extends StatelessWidget {
             topLeft: Radius.circular(AppRadius.bottomNav),
             topRight: Radius.circular(AppRadius.bottomNav),
           ),
-          child: BottomNavigationBar(
-            currentIndex: navigationShell.currentIndex,
-            onTap: _onDestinationSelected,
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.calendar_today),
-                label: 'Календарь',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.notifications),
-                label: 'Заявки',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: 'Профиль',
-              ),
-            ],
+          child: Theme(
+            data: Theme.of(context).copyWith(
+              splashColor: Colors.white.withValues(alpha: 0.08),
+              highlightColor: Colors.white.withValues(alpha: 0.08),
+            ),
+            child: BottomNavigationBar(
+              currentIndex: navigationShell.currentIndex,
+              onTap: _onDestinationSelected,
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.calendar_today),
+                  label: 'Календарь',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.notifications),
+                  label: 'Заявки',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.person),
+                  label: 'Профиль',
+                ),
+              ],
+            ),
           ),
         ),
       ),
