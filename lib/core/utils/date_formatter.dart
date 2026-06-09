@@ -34,6 +34,10 @@ String formatDateTitle(DateTime date) {
       '${_fullWeekdays[date.weekday - 1]}';
 }
 
+String formatDate(DateTime date) {
+  return '${date.day} ${_months[date.month - 1]}';
+}
+
 String formatTime(DateTime date) {
   final hour = date.hour.toString().padLeft(2, '0');
   final minute = date.minute.toString().padLeft(2, '0');

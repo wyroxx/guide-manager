@@ -65,7 +65,7 @@ class ExcursionsRepositoryImpl implements ExcursionsRepository {
             .map((doc) => doc.data())
             .where((excursion) => excursion.requiredLevels.contains(level))
             .toList()
-          ..sort((a, b) => a.startsDate.compareTo(b.startsDate));
+          ..sort((a, b) => a.startDate.compareTo(b.startDate));
 
     return excursions;
   }

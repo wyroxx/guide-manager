@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:guide_manager/app/theme.dart';
+import 'package:guide_manager/core/ui/empty_state.dart';
+import 'package:guide_manager/core/ui/error_state.dart';
 import 'package:guide_manager/core/utils/date_formatter.dart';
 import 'package:guide_manager/features/excursions/data/excursions_repository_impl.dart';
 import 'package:guide_manager/features/excursions/presentation/widgets/calendar.dart';
@@ -47,16 +47,8 @@ class _ExcursionsPageState extends ConsumerState<ExcursionsPage> {
               skipLoadingOnRefresh: false,
               data: (excursions) {
                 if (excursions.isEmpty) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset('assets/images/empty_excursions.svg'),
-                      const SizedBox(height: 30),
-                      Text(
-                        'На этот день экскурсий нет',
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                    ],
+                  return const AppEmptyState(
+                    title: 'На этот день экскурсий нет',
                   );
                 }
 
@@ -70,27 +62,11 @@ class _ExcursionsPageState extends ConsumerState<ExcursionsPage> {
                   ),
                 );
               },
-              error: (error, stackTrace) => Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SvgPicture.asset('assets/images/error.svg'),
-                  const SizedBox(height: 35),
-                  Text(
-                    'Не удалось загрузить экскурсии',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      ref.invalidate(provider);
-                    },
-                    child: Text(
-                      'Повторить',
-                      style: Theme.of(
-                        context,
-                      ).textTheme.titleSmall?.copyWith(color: AppColors.link),
-                    ),
-                  ),
-                ],
+              error: (error, stackTrace) => AppErrorState(
+                title: 'Не удалось загрузить экскурсии',
+                onRetry: () {
+                  ref.invalidate(provider);
+                },
               ),
               loading: () => const Center(child: CircularProgressIndicator()),
             ),

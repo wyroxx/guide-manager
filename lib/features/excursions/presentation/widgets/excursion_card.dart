@@ -17,7 +17,7 @@ class ExcursionCard extends StatelessWidget {
     } else if (excursion.hasMasterclass) {
       additional = '\nМастеркласс включен';
     }
-    final timeRange = formatTimeRange(excursion.startsDate, excursion.endDate);
+    final timeRange = formatTimeRange(excursion.startDate, excursion.endDate);
 
     return Card(
       child: Padding(

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:guide_manager/core/utils/date_formatter.dart';
+import 'package:guide_manager/features/excursions/domain/excursion.dart';
 
 class ApplicationCard extends StatelessWidget {
-  const ApplicationCard({super.key});
+  const ApplicationCard({super.key, required this.excursion});
+
+  final Excursion excursion;
 
   @override
   Widget build(BuildContext context) {
@@ -16,14 +20,14 @@ class ApplicationCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Экскурсия по университету',
+                    excursion.title,
                     style: Theme.of(context).textTheme.titleSmall,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                   ),
                   const SizedBox(height: 3),
                   Text(
-                    '12 июня 14:00, 7 чел.',
+                    '${formatDate(excursion.startDate)} ${formatTime(excursion.startDate)}, ${excursion.maxParticipants} чел.',
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ],

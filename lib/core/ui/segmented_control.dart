@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:guide_manager/app/theme.dart';
 
-enum ApplicationsTab { available, pending }
+enum ApplicationsTab { available, my }
 
 class ApplicationsSegmentedControl extends ConsumerWidget {
   const ApplicationsSegmentedControl({
@@ -35,14 +35,14 @@ class ApplicationsSegmentedControl extends ConsumerWidget {
             ),
           ),
         ),
-        ApplicationsTab.pending: Padding(
+        ApplicationsTab.my: Padding(
           padding: const EdgeInsets.symmetric(vertical: 8),
           child: Text(
             'Мои заявки',
             style: TextStyle(
               color: AppColors.textPrimary,
               fontSize: 14,
-              fontWeight: value == ApplicationsTab.pending
+              fontWeight: value == ApplicationsTab.my
                   ? FontWeight.w600
                   : FontWeight.w500,
             ),

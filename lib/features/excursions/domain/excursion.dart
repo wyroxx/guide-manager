@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:guide_manager/core/enums.dart';
+import 'package:guide_manager/features/applications/data/application.dart';
 import 'package:guide_manager/features/excursions/data/timestamp_converter.dart';
 
 part 'excursion.freezed.dart';
@@ -10,9 +11,7 @@ part 'excursion.g.dart';
 abstract class Excursion with _$Excursion {
   const factory Excursion({
     required String title,
-    @JsonKey(name: 'startDate')
-    @TimestampConverter()
-    required DateTime startsDate,
+    @TimestampConverter() required DateTime startDate,
     @TimestampConverter() required DateTime endDate,
     required String route,
     required String meetingPlace,
@@ -26,6 +25,8 @@ abstract class Excursion with _$Excursion {
     required int maxParticipants,
     required String excursionType,
     required PaymentStatus paymentStatus,
+    @JsonKey(includeFromJson: false, includeToJson: false)
+    Application? application,
   }) = _Excursion;
 
   factory Excursion.fromJson(Map<String, dynamic> json) =>
