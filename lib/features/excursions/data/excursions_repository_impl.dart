@@ -15,17 +15,19 @@ final guideLevelProvider = FutureProvider<GuideLevel?>((ref) async {
   return profileData?.level;
 });
 
-final excursionsProvider = FutureProvider.family<List<Excursion>, DateTime>((
+final excursionsProvider = StreamProvider.family<List<Excursion>, DateTime>((
   ref,
   date,
-) async {
+) async* {
   final repository = ref.watch(excursionsRepositoryProvider);
   final guideLevel = await ref.watch(guideLevelProvider.future);
+
   if (guideLevel == null) {
-    return [];
+    yield const [];
+    return;
   }
 
-  return repository.getExcursions(date: date, guideLevel: guideLevel);
+  yield* repository.watchExcursions(date: date, guideLevel: guideLevel);
 });
 
 class ExcursionsRepositoryImpl implements ExcursionsRepository {
@@ -37,19 +39,19 @@ class ExcursionsRepositoryImpl implements ExcursionsRepository {
   final FirebaseFirestore _firestore;
 
   @override
-  Future<List<Excursion>> getExcursions({
+  Stream<List<Excursion>> watchExcursions({
     required DateTime date,
     required GuideLevel guideLevel,
-  }) async {
+  }) {
     final email = _auth.currentUser?.email;
     if (email == null || email.isEmpty) {
-      return [];
+      return Stream.value(const <Excursion>[]);
     }
 
     final selectedDate = DateTime(date.year, date.month, date.day);
     final nextDate = selectedDate.add(const Duration(days: 1));
 
-    final snapshot = await _firestore
+    return _firestore
         .collection('excursions')
         .where('assignedGuides', arrayContains: email)
         .where(
@@ -67,15 +69,21 @@ class ExcursionsRepositoryImpl implements ExcursionsRepository {
           },
           toFirestore: (excursion, _) => excursion.toJson(),
         )
-        .get();
+        .snapshots()
+        .map((snapshot) {
+          final excursions = <Excursion>[];
 
-    final excursions =
-        snapshot.docs
-            .map((doc) => doc.data())
-            .where((excursion) => excursion.requiredLevels.contains(guideLevel))
-            .toList()
-          ..sort((a, b) => a.startDate.compareTo(b.startDate));
+          for (final doc in snapshot.docs) {
+            final excursion = doc.data();
 
-    return excursions;
+            if (excursion.requiredLevels.contains(guideLevel)) {
+              excursions.add(excursion);
+            }
+          }
+
+          excursions.sort((a, b) => a.startDate.compareTo(b.startDate));
+
+          return excursions;
+        });
   }
 }

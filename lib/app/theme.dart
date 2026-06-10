@@ -72,7 +72,7 @@ abstract final class AppTheme {
 
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
-          minimumSize: const Size.fromHeight(46),
+          minimumSize: const Size(0, 46),
           backgroundColor: AppColors.primaryDark,
           foregroundColor: AppColors.textPrimary,
           disabledBackgroundColor: AppColors.disabled,

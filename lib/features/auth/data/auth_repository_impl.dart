@@ -61,7 +61,7 @@ class AuthRepositoryImpl implements AuthRepository {
         return 'Ошибка авторизации';
     }
   }
-  
+
   @override
   Future<void> loginWithApple() async {
     try {
@@ -69,10 +69,10 @@ class AuthRepositoryImpl implements AuthRepository {
     } on FirebaseAuthException catch (e) {
       throw AuthException(_mapFirebaseError(e));
     } catch (_) {
-    throw AuthException('Не удалось войти через Apple');
+      throw AuthException('Не удалось войти через Apple');
     }
   }
-  
+
   @override
   Future<void> loginWithGoogle() async {
     try {
@@ -93,9 +93,18 @@ class AuthRepositoryImpl implements AuthRepository {
       }
       throw AuthException('Не удалось войти через Google');
     } on FirebaseAuthException catch (e) {
-      throw _mapFirebaseError(e);
+      throw AuthException(_mapFirebaseError(e));
     } catch (_) {
       throw AuthException('Не удалось войти через Google');
+    }
+  }
+
+  @override
+  Future<void> sendResetPasswordEmail(String email) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e) {
+      throw AuthException(_mapFirebaseError(e));
     }
   }
 }

@@ -70,9 +70,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '551338757670',
     projectId: 'tourapp-66e02',
     storageBucket: 'tourapp-66e02.firebasestorage.app',
-    androidClientId: '551338757670-6t6ddgtkot2ci7srllunlbl4pig33gnq.apps.googleusercontent.com',
-    iosClientId: '551338757670-2nc6lpffpb5cc8lgm9qc6hu2rj1bqqui.apps.googleusercontent.com',
+    androidClientId:
+        '551338757670-6t6ddgtkot2ci7srllunlbl4pig33gnq.apps.googleusercontent.com',
+    iosClientId:
+        '551338757670-2nc6lpffpb5cc8lgm9qc6hu2rj1bqqui.apps.googleusercontent.com',
     iosBundleId: 'com.traveltech.guideManager',
   );
-
 }

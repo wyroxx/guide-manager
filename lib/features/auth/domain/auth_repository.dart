@@ -4,4 +4,5 @@ abstract interface class AuthRepository {
   Future<void> logout();
   Future<void> loginWithApple();
   Future<void> loginWithGoogle();
+  Future<void> sendResetPasswordEmail(String email);
 }

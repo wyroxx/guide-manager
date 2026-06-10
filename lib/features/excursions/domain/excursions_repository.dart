@@ -2,7 +2,7 @@ import 'package:guide_manager/core/enums.dart';
 import 'package:guide_manager/features/excursions/domain/excursion.dart';
 
 abstract interface class ExcursionsRepository {
-  Future<List<Excursion>> getExcursions({
+  Stream<List<Excursion>> watchExcursions({
     required DateTime date,
     required GuideLevel guideLevel,
   });

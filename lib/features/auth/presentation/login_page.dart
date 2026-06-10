@@ -9,6 +9,7 @@ import 'package:guide_manager/features/auth/data/auth_repository_impl.dart';
 import 'package:guide_manager/features/auth/domain/auth_exception.dart';
 import 'package:guide_manager/features/auth/presentation/widgets/auth_text_field.dart';
 import 'package:guide_manager/features/auth/presentation/widgets/primary_button.dart';
+import 'package:guide_manager/features/auth/presentation/widgets/reset_password_sheet.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -199,7 +200,23 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 ],
               ),
               GestureDetector(
-                onTap: () {},
+                onTap: () async {
+                  final isSent = await showModalBottomSheet<bool>(
+                    context: context,
+                    isScrollControlled: true,
+                    barrierColor: Colors.black54,
+                    backgroundColor: AppColors.background,
+                    builder: (context) => const ResetPasswordSheet(),
+                  );
+
+                  if (!context.mounted || isSent != true) return;
+
+                  showAppToast(
+                    context,
+                    message: 'Письмо для восстановления отправлено',
+                    type: AppToastType.success,
+                  );
+                },
                 child: Text(
                   'Забыли пароль?',
                   style: Theme.of(
