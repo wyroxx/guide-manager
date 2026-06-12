@@ -102,15 +102,20 @@ class AppShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
+
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          border: BoxBorder.all(width: 1.5, color: AppColors.border),
+          border: context.isDark
+              ? BoxBorder.all(width: 1.5, color: colors.border)
+              : null,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(AppRadius.bottomNav),
             topRight: Radius.circular(AppRadius.bottomNav),
           ),
+          boxShadow: context.isLight ? AppShadows.navBarShadow : null,
         ),
         child: ClipRRect(
           borderRadius: const BorderRadius.only(

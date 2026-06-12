@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:guide_manager/app/theme.dart';
 
@@ -16,10 +17,14 @@ class ApplicationsSegmentedControl extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final colors = context.appColors;
+
     return CupertinoSlidingSegmentedControl<ApplicationsTab>(
       groupValue: value,
-      backgroundColor: const Color(0xFF323137),
-      thumbColor: const Color(0xFF5A5863),
+      backgroundColor: context.isLight
+          ? const Color(0xFFE5E7EB)
+          : const Color(0xFF323137),
+      thumbColor: context.isLight ? Colors.white : const Color(0xFF5A5863),
       padding: const EdgeInsets.all(3),
       children: {
         ApplicationsTab.available: Padding(
@@ -27,7 +32,7 @@ class ApplicationsSegmentedControl extends ConsumerWidget {
           child: Text(
             'Доступные',
             style: TextStyle(
-              color: AppColors.textPrimary,
+              color: colors.textPrimary,
               fontSize: 14,
               fontWeight: value == ApplicationsTab.available
                   ? FontWeight.w600
@@ -40,7 +45,7 @@ class ApplicationsSegmentedControl extends ConsumerWidget {
           child: Text(
             'Мои заявки',
             style: TextStyle(
-              color: AppColors.textPrimary,
+              color: colors.textPrimary,
               fontSize: 14,
               fontWeight: value == ApplicationsTab.my
                   ? FontWeight.w600

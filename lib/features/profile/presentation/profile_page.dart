@@ -43,11 +43,20 @@ class ProfilePage extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Spacer(),
-                  SvgPicture.asset(
-                    'assets/images/avatar.svg',
-                    height: 160,
-                    width: 160,
-                  ),
+                  profileData.avatar.isEmpty
+                      ? SvgPicture.asset(
+                          'assets/images/avatar.svg',
+                          height: 160,
+                          width: 160,
+                        )
+                      : ClipRRect(
+                          borderRadius: BorderRadius.circular(80),
+                          child: Image.network(
+                            profileData.avatar,
+                            height: 160,
+                            width: 160,
+                          ),
+                        ),
                   const SizedBox(height: 16),
                   Text(
                     profileData.name,
@@ -94,49 +103,57 @@ class _ProfileCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '@${profileData.telegramAlias}',
-              style: Theme.of(
-                context,
-              ).textTheme.bodyLarge?.copyWith(color: AppColors.textPrimary),
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 10),
-              child: Divider(thickness: 1),
-            ),
-            Text(
-              '+${profileData.phone}',
-              style: Theme.of(
-                context,
-              ).textTheme.bodyLarge?.copyWith(color: AppColors.textPrimary),
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 10),
-              child: Divider(thickness: 1),
-            ),
-            Text(
-              'Экскурсий проведено: ${profileData.toursCount}',
-              style: Theme.of(
-                context,
-              ).textTheme.bodyLarge?.copyWith(color: AppColors.textPrimary),
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 10),
-              child: Divider(thickness: 1),
-            ),
-            Text(
-              'Уровень: ${profileData.level.nameRus}',
-              style: Theme.of(
-                context,
-              ).textTheme.bodyLarge?.copyWith(color: AppColors.textPrimary),
-            ),
-          ],
+    final colors = context.appColors;
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(AppRadius.card),
+        boxShadow: context.isLight ? AppShadows.cardShadow : null,
+      ),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '@${profileData.telegramAlias}',
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyLarge?.copyWith(color: colors.textPrimary),
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 10),
+                child: Divider(thickness: 1),
+              ),
+              Text(
+                '+${profileData.phone}',
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyLarge?.copyWith(color: colors.textPrimary),
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 10),
+                child: Divider(thickness: 1),
+              ),
+              Text(
+                'Экскурсий проведено: ${profileData.toursCount}',
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyLarge?.copyWith(color: colors.textPrimary),
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 10),
+                child: Divider(thickness: 1),
+              ),
+              Text(
+                'Уровень: ${profileData.level.nameRus}',
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyLarge?.copyWith(color: colors.textPrimary),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -25,6 +25,8 @@ class AuthTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
+
     return ConstrainedBox(
       constraints: const BoxConstraints(minHeight: 46),
       child: TextFormField(
@@ -34,7 +36,7 @@ class AuthTextField extends StatelessWidget {
         obscureText: obscureText,
         textInputAction: textInputAction,
         validator: validator,
-        style: const TextStyle(color: AppColors.inputHint, fontSize: 17),
+        style: TextStyle(color: colors.inputHint, fontSize: 17),
         decoration: InputDecoration(
           hintText: hintText,
           prefixIcon: prefixIcon == null

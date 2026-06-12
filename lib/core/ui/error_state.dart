@@ -10,6 +10,8 @@ class AppErrorState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -27,7 +29,7 @@ class AppErrorState extends StatelessWidget {
               'Повторить',
               style: Theme.of(
                 context,
-              ).textTheme.titleSmall?.copyWith(color: AppColors.link),
+              ).textTheme.titleSmall?.copyWith(color: colors.link),
             ),
           ),
       ],

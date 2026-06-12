@@ -27,6 +27,7 @@ class _ResetPasswordSheetState extends ConsumerState<ResetPasswordSheet> {
   @override
   Widget build(BuildContext context) {
     final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
+    final colors = context.appColors;
 
     return AnimatedPadding(
       duration: const Duration(milliseconds: 200),
@@ -44,7 +45,7 @@ class _ResetPasswordSheetState extends ConsumerState<ResetPasswordSheet> {
                 width: 35,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(AppRadius.sm),
-                  color: AppColors.textMuted,
+                  color: colors.textMuted,
                 ),
               ),
             ),
@@ -72,16 +73,14 @@ class _ResetPasswordSheetState extends ConsumerState<ResetPasswordSheet> {
                 decoration: InputDecoration(
                   hintText: 'Введите email',
                   hintStyle: TextStyle(
-                    color: AppColors.textSecondary.withValues(alpha: 0.85),
+                    color: colors.textSecondary.withValues(alpha: 0.85),
                   ),
                   prefixIcon: const Icon(Icons.mail_outlined),
-                  prefixIconColor: AppColors.textSecondary.withValues(
-                    alpha: 0.85,
-                  ),
-                  fillColor: AppColors.surface,
-                  enabledBorder: const OutlineInputBorder(
-                    borderSide: BorderSide(color: AppColors.border, width: 1.3),
-                    borderRadius: BorderRadius.all(
+                  prefixIconColor: colors.textSecondary.withValues(alpha: 0.85),
+                  fillColor: colors.surface,
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: colors.border, width: 1.3),
+                    borderRadius: const BorderRadius.all(
                       Radius.circular(AppRadius.input),
                     ),
                   ),
@@ -97,7 +96,8 @@ class _ResetPasswordSheetState extends ConsumerState<ResetPasswordSheet> {
                 Expanded(
                   child: OutlinedButton(
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: AppColors.textSecondary,
+                      foregroundColor: colors.textSecondary,
+                      backgroundColor: colors.surface,
                       minimumSize: const Size(0, 46),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(AppRadius.button),
@@ -178,11 +178,13 @@ class InfoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
+
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        color: AppColors.primary.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(AppRadius.card),
+        color: colors.primary.withValues(alpha: 0.18),
       ),
       child: Row(
         children: [

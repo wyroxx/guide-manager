@@ -41,6 +41,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/traveltech.png
+    - assets/images/traveltech_light.png
     - assets/icons/apple.png
     - assets/icons/google.png
     - assets/images/error.svg

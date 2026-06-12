@@ -18,6 +18,7 @@ class Calendar extends StatelessWidget {
     return SizedBox(
       height: 66,
       child: ListView.separated(
+        clipBehavior: Clip.none,
         itemBuilder: (context, index) {
           final date = today.add(Duration(days: index));
           return _CalendarItem(
@@ -50,14 +51,21 @@ class _CalendarItem extends StatelessWidget {
     final formattedDate = formatCalendarDate(date);
     final String day = formattedDate.$1;
     final String weekday = formattedDate.$2;
+    final colors = context.appColors;
+    final textColor = isSelected ? Colors.white : colors.textPrimary;
+
     return Container(
       decoration: BoxDecoration(
-        color: isSelected ? AppColors.primaryDark : AppColors.surface,
+        color: isSelected ? colors.primary : colors.surface,
         borderRadius: BorderRadius.circular(AppRadius.calendarTile),
-        border: Border.all(
-          color: isSelected ? AppColors.primaryDark : AppColors.border,
-          width: 1.3,
-        ),
+        border: context.isLight
+            ? null
+            : Border.all(
+                strokeAlign: BorderSide.strokeAlignOutside,
+                color: isSelected ? colors.primary : colors.border,
+                width: 1.3,
+              ),
+        boxShadow: context.isLight ? AppShadows.calendarShadow : null,
       ),
       child: Material(
         color: Colors.transparent,
@@ -76,15 +84,14 @@ class _CalendarItem extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.w500,
-                      color: Colors.white,
-                    ),
+                    ).copyWith(color: textColor),
                   ),
                   TextSpan(
                     text: weekday,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
-                      color: Colors.white,
+                      color: textColor,
                     ),
                   ),
                 ],

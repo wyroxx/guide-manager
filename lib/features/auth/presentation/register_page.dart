@@ -46,6 +46,8 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -54,7 +56,12 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const SizedBox(height: 150),
-              Image.asset('assets/images/traveltech.png', width: 275),
+              Image.asset(
+                context.isDark
+                    ? 'assets/images/traveltech.png'
+                    : 'assets/images/traveltech_light.png',
+                width: 275,
+              ),
               const SizedBox(height: 80),
               Text(
                 'Создайте аккаунт',
@@ -121,7 +128,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                   Text(
                     'Есть аккаунт?',
                     style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                      color: AppColors.textPrimary,
+                      color: colors.textPrimary,
                     ),
                   ),
                   const SizedBox(width: 6),
@@ -131,7 +138,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                       'Войти',
                       style: Theme.of(
                         context,
-                      ).textTheme.labelMedium?.copyWith(color: AppColors.link),
+                      ).textTheme.labelMedium?.copyWith(color: colors.link),
                     ),
                   ),
                 ],

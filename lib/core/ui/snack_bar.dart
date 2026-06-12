@@ -97,11 +97,13 @@ class _AppToastState extends State<_AppToast>
   }
 
   Color get _color {
+    final colors = context.appColors;
+
     return switch (widget.type) {
-      AppToastType.info => AppColors.primary,
-      AppToastType.success => const Color(0xFF2E7D32),
-      AppToastType.error => const Color(0xFFD32F2F),
-      AppToastType.warning => const Color(0xFFF57C00),
+      AppToastType.info => colors.primary,
+      AppToastType.success => colors.success,
+      AppToastType.error => colors.error,
+      AppToastType.warning => colors.warning,
     };
   }
 
@@ -116,6 +118,8 @@ class _AppToastState extends State<_AppToast>
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
+
     return Positioned(
       top: MediaQuery.of(context).padding.top + 20,
       left: 16,
@@ -129,7 +133,7 @@ class _AppToastState extends State<_AppToast>
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
               decoration: BoxDecoration(
-                color: AppColors.surface,
+                color: colors.surface,
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
@@ -154,10 +158,10 @@ class _AppToastState extends State<_AppToast>
                   Expanded(
                     child: Text(
                       widget.message,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
+                        color: colors.textPrimary,
                       ),
                     ),
                   ),

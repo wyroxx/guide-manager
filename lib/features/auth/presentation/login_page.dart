@@ -65,6 +65,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -73,7 +75,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const SizedBox(height: 150),
-              Image.asset('assets/images/traveltech.png', width: 275),
+              Image.asset(
+                context.isDark
+                    ? 'assets/images/traveltech.png'
+                    : 'assets/images/traveltech_light.png',
+                width: 275,
+              ),
               const SizedBox(height: 60),
               Text(
                 'Войдите в аккаунт',
@@ -125,52 +132,74 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 ),
               ),
               const SizedBox(height: 60),
-              const Row(
+              Row(
                 children: [
-                  Expanded(child: Divider(thickness: 2, color: Colors.white)),
-                  SizedBox(width: 8),
+                  Expanded(child: Divider(thickness: 2, color: colors.border)),
+                  const SizedBox(width: 8),
                   Text(
                     'Войти через',
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
-                      color: Colors.white,
+                      color: colors.textPrimary,
                     ),
                   ),
-                  SizedBox(width: 8),
-                  Expanded(child: Divider(thickness: 2, color: Colors.white)),
+                  const SizedBox(width: 8),
+                  Expanded(child: Divider(thickness: 2, color: colors.border)),
                 ],
               ),
               const SizedBox(height: 24),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () async => await _loginWithGoogle(),
-                        child: Ink.image(
-                          image: const AssetImage('assets/icons/google.png'),
-                          height: 50,
-                          width: 50,
-                          fit: BoxFit.cover,
+                  Container(
+                    height: 50,
+                    width: 50,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: context.isLight
+                            ? colors.border
+                            : Colors.transparent,
+                        width: 0.8,
+                      ),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () async => await _loginWithGoogle(),
+                          child: Ink.image(
+                            image: const AssetImage('assets/icons/google.png'),
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                     ),
                   ),
                   const SizedBox(width: 36),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () async => await _loginWithApple(),
-                        child: Ink.image(
-                          image: const AssetImage('assets/icons/apple.png'),
-                          height: 50,
-                          width: 50,
-                          fit: BoxFit.cover,
+                  Container(
+                    height: 50,
+                    width: 50,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: context.isLight
+                            ? colors.border
+                            : Colors.transparent,
+                        width: 0.8,
+                      ),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () async => await _loginWithApple(),
+                          child: Ink.image(
+                            image: const AssetImage('assets/icons/apple.png'),
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                     ),
@@ -184,7 +213,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   Text(
                     'Нет аккаунта?',
                     style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                      color: AppColors.textPrimary,
+                      color: colors.textPrimary,
                     ),
                   ),
                   const SizedBox(width: 6),
@@ -194,7 +223,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       'Регистрация',
                       style: Theme.of(
                         context,
-                      ).textTheme.labelMedium?.copyWith(color: AppColors.link),
+                      ).textTheme.labelMedium?.copyWith(color: colors.link),
                     ),
                   ),
                 ],
@@ -205,7 +234,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     context: context,
                     isScrollControlled: true,
                     barrierColor: Colors.black54,
-                    backgroundColor: AppColors.background,
+                    backgroundColor: colors.background,
                     builder: (context) => const ResetPasswordSheet(),
                   );
 
@@ -221,7 +250,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   'Забыли пароль?',
                   style: Theme.of(
                     context,
-                  ).textTheme.labelMedium?.copyWith(color: AppColors.link),
+                  ).textTheme.labelMedium?.copyWith(color: colors.link),
                 ),
               ),
               const SizedBox(height: 36),
