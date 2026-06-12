@@ -9,11 +9,18 @@ import 'package:guide_manager/features/applications/data/applications_repository
 import 'package:guide_manager/features/applications/presentation/application_card.dart';
 import 'package:guide_manager/features/excursions/domain/excursion.dart';
 
-class ApplicationsPage extends ConsumerWidget {
+class ApplicationsPage extends ConsumerStatefulWidget {
   const ApplicationsPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ApplicationsPage> createState() => _ApplicationsPageState();
+}
+
+class _ApplicationsPageState extends ConsumerState<ApplicationsPage> {
+  final Set<String> _submittingExcursionIds = {};
+
+  @override
+  Widget build(BuildContext context) {
     final tab = ref.watch(applicationsTabProvider);
     Widget content;
     if (tab == ApplicationsTab.available) {
@@ -32,8 +39,11 @@ class ApplicationsPage extends ConsumerWidget {
                 return ListView.separated(
                   itemBuilder: (context, index) => ApplicationCard(
                     excursion: excursions[index],
+                    isLoading: _submittingExcursionIds.contains(
+                      excursions[index].id,
+                    ),
                     onApply: () async {
-                      await _applyToExcursion(context, ref, excursions[index]);
+                      await _applyToExcursion(context, excursions[index]);
                     },
                   ),
                   separatorBuilder: (_, _) => const SizedBox(height: 10),
@@ -104,9 +114,10 @@ class ApplicationsPage extends ConsumerWidget {
 
   Future<void> _applyToExcursion(
     BuildContext context,
-    WidgetRef ref,
     Excursion excursion,
   ) async {
+    if (_submittingExcursionIds.contains(excursion.id)) return;
+
     final email = FirebaseAuth.instance.currentUser?.email;
     if (email == null || email.isEmpty) {
       showAppToast(
@@ -116,6 +127,10 @@ class ApplicationsPage extends ConsumerWidget {
       );
       return;
     }
+
+    setState(() {
+      _submittingExcursionIds.add(excursion.id);
+    });
 
     try {
       await ref
@@ -138,6 +153,12 @@ class ApplicationsPage extends ConsumerWidget {
         message: 'Не удалось отправить заявку',
         type: AppToastType.error,
       );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _submittingExcursionIds.remove(excursion.id);
+        });
+      }
     }
   }
 }

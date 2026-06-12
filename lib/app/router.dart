@@ -9,6 +9,7 @@ import 'package:guide_manager/features/auth/presentation/login_page.dart';
 import 'package:guide_manager/features/auth/presentation/register_page.dart';
 import 'package:guide_manager/features/excursions/presentation/excursions_page.dart';
 import 'package:guide_manager/features/profile/presentation/profile_page.dart';
+import 'package:guide_manager/features/profile/presentation/settings_page.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -74,6 +75,13 @@ final routerProvider = Provider<GoRouter>((ref) {
                 path: AppRoute.profile.path,
                 name: AppRoute.profile.name,
                 builder: (context, state) => const ProfilePage(),
+                routes: [
+                  GoRoute(
+                    path: 'settings',
+                    name: AppRoute.settings.name,
+                    builder: (context, state) => const SettingsPage(),
+                  ),
+                ],
               ),
             ],
           ),
@@ -88,7 +96,8 @@ enum AppRoute {
   register('/register'),
   excursions('/excursions'),
   applications('/applications'),
-  profile('/profile');
+  profile('/profile'),
+  settings('/profile/settings');
 
   const AppRoute(this.path);
 
@@ -109,7 +118,11 @@ class AppShell extends StatelessWidget {
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           border: context.isDark
-              ? BoxBorder.all(width: 1.5, color: colors.border)
+              ? BoxBorder.all(
+                  width: 1.5,
+                  color: colors.border,
+                  strokeAlign: BorderSide.strokeAlignOutside,
+                )
               : null,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(AppRadius.bottomNav),
@@ -124,8 +137,12 @@ class AppShell extends StatelessWidget {
           ),
           child: Theme(
             data: Theme.of(context).copyWith(
-              splashColor: Colors.white.withValues(alpha: 0.08),
-              highlightColor: Colors.white.withValues(alpha: 0.08),
+              splashColor: context.isDark
+                  ? Colors.white.withValues(alpha: 0.08)
+                  : colors.primary.withValues(alpha: 0.08),
+              highlightColor: context.isDark
+                  ? Colors.white.withValues(alpha: 0.08)
+                  : colors.primary.withValues(alpha: 0.08),
             ),
             child: BottomNavigationBar(
               currentIndex: navigationShell.currentIndex,

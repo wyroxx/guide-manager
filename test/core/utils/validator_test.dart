@@ -31,6 +31,7 @@ void main() {
 
     test('returns null for valid password', () {
       expect(validator.validatePassword('password1'), isNull);
+      expect(validator.validatePassword(' pass123'), isNull);
     });
   });
 

@@ -5,12 +5,21 @@ import 'package:guide_manager/app/theme.dart';
 
 enum AppToastType { info, success, error, warning }
 
+OverlayEntry? _activeToastEntry;
+
 void showAppToast(
   BuildContext context, {
   required String message,
   AppToastType type = AppToastType.info,
 }) {
   final overlay = Overlay.of(context);
+
+  if (_activeToastEntry case final activeEntry?) {
+    if (activeEntry.mounted) {
+      activeEntry.remove();
+    }
+    _activeToastEntry = null;
+  }
 
   late OverlayEntry entry;
 
@@ -20,14 +29,18 @@ void showAppToast(
         message: message,
         type: type,
         onDismissed: () {
+          if (!identical(_activeToastEntry, entry)) return;
+
           if (entry.mounted) {
             entry.remove();
           }
+          _activeToastEntry = null;
         },
       );
     },
   );
 
+  _activeToastEntry = entry;
   overlay.insert(entry);
 }
 
@@ -51,6 +64,7 @@ class _AppToastState extends State<_AppToast>
   late final AnimationController _controller;
   late final Animation<Offset> _slideAnimation;
   late final Animation<double> _fadeAnimation;
+  Timer? _dismissTimer;
 
   @override
   void initState() {
@@ -77,21 +91,28 @@ class _AppToastState extends State<_AppToast>
       reverseCurve: Curves.easeIn,
     );
 
-    unawaited(_showAndHide());
+    unawaited(_show());
   }
 
-  Future<void> _showAndHide() async {
+  Future<void> _show() async {
     await _controller.forward();
-    await Future<void>.delayed(const Duration(seconds: 3));
-
     if (!mounted) return;
 
+    _dismissTimer = Timer(const Duration(seconds: 3), () {
+      unawaited(_hide());
+    });
+  }
+
+  Future<void> _hide() async {
     await _controller.reverse();
+    if (!mounted) return;
+
     widget.onDismissed();
   }
 
   @override
   void dispose() {
+    _dismissTimer?.cancel();
     _controller.dispose();
     super.dispose();
   }

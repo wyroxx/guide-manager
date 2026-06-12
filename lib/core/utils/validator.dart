@@ -19,7 +19,7 @@ class Validator {
   }
 
   String? validatePassword(String? password) {
-    final value = password?.trim() ?? '';
+    final value = password ?? '';
 
     if (value.isEmpty) {
       return 'Введите пароль';

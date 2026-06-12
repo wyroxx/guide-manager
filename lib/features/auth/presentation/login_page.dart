@@ -23,35 +23,72 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
+  _LoginAction? _activeAction;
+
+  bool get _isSubmitting => _activeAction != null;
 
   Future<void> _login(String email, String password) async {
+    if (_isSubmitting) return;
     final bool isValid = _formKey.currentState?.validate() ?? false;
     if (!isValid) return;
+
+    setState(() {
+      _activeAction = _LoginAction.password;
+    });
+
     try {
-      await ref.read(authRepositoryProvider).login(email, password);
+      await ref.read(authRepositoryProvider).login(email.trim(), password);
     } on AuthException catch (e) {
       if (mounted) {
         showAppToast(context, message: e.message, type: AppToastType.error);
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _activeAction = null;
+        });
       }
     }
   }
 
   Future<void> _loginWithGoogle() async {
+    if (_isSubmitting) return;
+    setState(() {
+      _activeAction = _LoginAction.google;
+    });
+
     try {
       await ref.read(authRepositoryProvider).loginWithGoogle();
     } on AuthException catch (e) {
       if (mounted) {
         showAppToast(context, message: e.message, type: AppToastType.error);
       }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _activeAction = null;
+        });
+      }
     }
   }
 
   Future<void> _loginWithApple() async {
+    if (_isSubmitting) return;
+    setState(() {
+      _activeAction = _LoginAction.apple;
+    });
+
     try {
       await ref.read(authRepositoryProvider).loginWithApple();
     } on AuthException catch (e) {
       if (mounted) {
         showAppToast(context, message: e.message, type: AppToastType.error);
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _activeAction = null;
+        });
       }
     }
   }
@@ -122,10 +159,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     ),
                     const SizedBox(height: 8),
                     PrimaryButton(
-                      onPressed: () async => await _login(
-                        _emailController.text,
-                        _passwordController.text,
-                      ),
+                      onPressed: _isSubmitting
+                          ? null
+                          : () async => await _login(
+                              _emailController.text,
+                              _passwordController.text,
+                            ),
+                      isLoading: _activeAction == _LoginAction.password,
                       text: 'Войти',
                     ),
                   ],
@@ -168,7 +208,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       child: Material(
                         color: Colors.transparent,
                         child: InkWell(
-                          onTap: () async => await _loginWithGoogle(),
+                          onTap: _isSubmitting
+                              ? null
+                              : () async => await _loginWithGoogle(),
                           child: Ink.image(
                             image: const AssetImage('assets/icons/google.png'),
                             fit: BoxFit.cover,
@@ -195,7 +237,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       child: Material(
                         color: Colors.transparent,
                         child: InkWell(
-                          onTap: () async => await _loginWithApple(),
+                          onTap: _isSubmitting
+                              ? null
+                              : () async => await _loginWithApple(),
                           child: Ink.image(
                             image: const AssetImage('assets/icons/apple.png'),
                             fit: BoxFit.cover,
@@ -261,3 +305,5 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     );
   }
 }
+
+enum _LoginAction { password, google, apple }

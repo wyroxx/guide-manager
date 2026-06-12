@@ -35,8 +35,9 @@ void main() {
     await tester.pumpWidget(
       buildSubject(onPressed: () => taps++, isLoading: true),
     );
-    await tester.tap(find.text('Войти'));
+    await tester.tap(find.byType(FilledButton));
 
     expect(taps, 0);
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
 }

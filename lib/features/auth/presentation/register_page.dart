@@ -23,15 +23,28 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
   final _nameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
+  bool _isSubmitting = false;
 
   Future<void> _register(String email, String password) async {
+    if (_isSubmitting) return;
     final bool isValid = _formKey.currentState?.validate() ?? false;
     if (!isValid) return;
+
+    setState(() {
+      _isSubmitting = true;
+    });
+
     try {
-      await ref.read(authRepositoryProvider).register(email, password);
+      await ref.read(authRepositoryProvider).register(email.trim(), password);
     } on AuthException catch (e) {
       if (mounted) {
         showAppToast(context, message: e.message, type: AppToastType.error);
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSubmitting = false;
+        });
       }
     }
   }
@@ -112,10 +125,13 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                     ),
                     const SizedBox(height: 8),
                     PrimaryButton(
-                      onPressed: () async => await _register(
-                        _emailController.text,
-                        _passwordController.text,
-                      ),
+                      onPressed: _isSubmitting
+                          ? null
+                          : () async => await _register(
+                              _emailController.text,
+                              _passwordController.text,
+                            ),
+                      isLoading: _isSubmitting,
                       text: 'Регистрация',
                     ),
                   ],

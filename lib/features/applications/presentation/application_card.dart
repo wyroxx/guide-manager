@@ -5,10 +5,16 @@ import 'package:guide_manager/core/utils/date_formatter.dart';
 import 'package:guide_manager/features/excursions/domain/excursion.dart';
 
 class ApplicationCard extends StatelessWidget {
-  const ApplicationCard({super.key, required this.excursion, this.onApply});
+  const ApplicationCard({
+    super.key,
+    required this.excursion,
+    this.onApply,
+    this.isLoading = false,
+  });
 
   final Excursion excursion;
   final VoidCallback? onApply;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -45,22 +51,29 @@ class ApplicationCard extends StatelessWidget {
               onApply == null
                   ? StatusBadge(status: excursion.application!.status)
                   : FilledButton(
-                      onPressed: onApply,
+                      onPressed: isLoading ? null : onApply,
                       style: FilledButton.styleFrom(
+                        disabledBackgroundColor: context.appColors.primary,
                         padding: const EdgeInsets.symmetric(
                           horizontal: 12,
                           vertical: 10,
                         ),
-                        minimumSize: const Size(0, 40),
+                        minimumSize: const Size(96, 40),
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
-                      child: Text(
-                        'Податься',
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontSize: 14,
-                          color: Colors.white,
-                        ),
-                      ),
+                      child: isLoading
+                          ? const SizedBox.square(
+                              dimension: 18,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              ),
+                            )
+                          : Text(
+                              'Податься',
+                              style: Theme.of(context).textTheme.titleSmall
+                                  ?.copyWith(fontSize: 14, color: Colors.white),
+                            ),
                     ),
             ],
           ),
@@ -90,7 +103,7 @@ class StatusBadge extends StatelessWidget {
           status.statusRus,
           style: Theme.of(context).textTheme.titleSmall?.copyWith(
             fontSize: 14,
-            color: colors.accepted,
+            color: colors.acceptedText,
           ),
         ),
       );
@@ -105,7 +118,7 @@ class StatusBadge extends StatelessWidget {
           status.statusRus,
           style: Theme.of(context).textTheme.titleSmall?.copyWith(
             fontSize: 14,
-            color: colors.rejected,
+            color: colors.rejectedText,
           ),
         ),
       );

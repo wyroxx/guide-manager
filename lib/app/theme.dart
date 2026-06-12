@@ -261,7 +261,9 @@ class AppPalette extends ThemeExtension<AppPalette> {
     required this.success,
     required this.warning,
     required this.accepted,
+    required this.acceptedText,
     required this.rejected,
+    required this.rejectedText,
     required this.pending,
     required this.disabled,
   });
@@ -284,7 +286,9 @@ class AppPalette extends ThemeExtension<AppPalette> {
   final Color success;
   final Color warning;
   final Color accepted;
+  final Color acceptedText;
   final Color rejected;
+  final Color rejectedText;
   final Color pending;
   final Color disabled;
 
@@ -303,11 +307,13 @@ class AppPalette extends ThemeExtension<AppPalette> {
     inputFill: Color(0xFFF8FAFC),
     inputHint: Color(0xFF5A5A5A),
     inputIcon: Color(0xFF5A5A5A),
-    error: Color(0xFFFF6B6B),
-    success: Color(0xFF22C55E),
+    error: Color(0xFFD32F2F),
+    success: Color(0xFF2E7D32),
     warning: Color(0xFFF59E0B),
     accepted: Color(0xFF30D158),
+    acceptedText: Color(0xFF30D158),
     rejected: Color(0xFFFF453A),
+    rejectedText: Color(0xFFFF453A),
     pending: Color(0xFF5A5863),
     disabled: Color(0xFF4A4850),
   );
@@ -327,11 +333,13 @@ class AppPalette extends ThemeExtension<AppPalette> {
     inputFill: Colors.white,
     inputHint: Color(0xFF7B7C7E),
     inputIcon: Color(0xFF7B7C7E),
-    error: Color(0xFFFF453A),
-    success: Color(0xFF22C55E),
+    error: Color(0xFFD32F2F),
+    success: Color(0xFF2E7D32),
     warning: Color(0xFFF59E0B),
     accepted: Color(0xFF30D158),
+    acceptedText: Color(0xFF067647),
     rejected: Color(0xFFFF453A),
+    rejectedText: Color(0xFFB42318),
     pending: Color(0xFFBDB8B0),
     disabled: Color(0xFFB8B9BC),
   );
@@ -356,7 +364,9 @@ class AppPalette extends ThemeExtension<AppPalette> {
     Color? success,
     Color? warning,
     Color? accepted,
+    Color? acceptedText,
     Color? rejected,
+    Color? rejectedText,
     Color? pending,
     Color? disabled,
   }) {
@@ -379,7 +389,9 @@ class AppPalette extends ThemeExtension<AppPalette> {
       success: success ?? this.success,
       warning: warning ?? this.warning,
       accepted: accepted ?? this.accepted,
+      acceptedText: acceptedText ?? this.acceptedText,
       rejected: rejected ?? this.rejected,
+      rejectedText: rejectedText ?? this.rejectedText,
       pending: pending ?? this.pending,
       disabled: disabled ?? this.disabled,
     );
@@ -410,7 +422,9 @@ class AppPalette extends ThemeExtension<AppPalette> {
       success: Color.lerp(success, other.success, t)!,
       warning: Color.lerp(warning, other.warning, t)!,
       accepted: Color.lerp(accepted, other.accepted, t)!,
+      acceptedText: Color.lerp(acceptedText, other.acceptedText, t)!,
       rejected: Color.lerp(rejected, other.rejected, t)!,
+      rejectedText: Color.lerp(rejectedText, other.rejectedText, t)!,
       pending: Color.lerp(pending, other.pending, t)!,
       disabled: Color.lerp(disabled, other.disabled, t)!,
     );
@@ -433,39 +447,6 @@ extension AppBrightness on Brightness {
   bool get isLight => this == Brightness.light;
 
   bool get isDark => this == Brightness.dark;
-}
-
-abstract final class AppColors {
-  static const Color primary = Color(0xFF004BD1);
-  static const Color primarySoft = Color(0x332F6BFF);
-
-  static const Color background = Color(0xFF2A292E);
-
-  static const Color surface = Color(0xFF36353C);
-  static const Color surfaceElevated = Color(0xFF383740);
-  static const Color surfaceLow = Color(0xFF323137);
-
-  static const Color border = Color(0xFF45444D);
-
-  static const Color textPrimary = Colors.white;
-  static const Color textSecondary = Color(0xFFD0CDD7);
-  static const Color textMuted = Color(0xFFA19EAA);
-
-  static const Color link = Color(0xFF29B6F6);
-
-  static const Color inputFill = Color(0xFFF8FAFC);
-  static const Color inputHint = Color(0xFF5A5A5A);
-  static const Color inputIcon = Color(0xFF5A5A5A);
-
-  static const Color error = Color(0xFFFF6B6B);
-  static const Color success = Color(0xFF22C55E);
-  static const Color warning = Color(0xFFF59E0B);
-
-  static const Color accepted = Color(0xFF30D158);
-  static const Color rejected = Color(0xFFFF453A);
-  static const Color pending = Color(0xFF5A5863);
-
-  static const Color disabled = Color(0xFF4A4850);
 }
 
 abstract final class AppSpacing {
