@@ -35,6 +35,14 @@ void main() {
     });
   });
 
+  group('Validator.validateLoginPassword', () {
+    test('requires a value without applying registration requirements', () {
+      expect(validator.validateLoginPassword(''), 'Введите пароль');
+      expect(validator.validateLoginPassword('short'), isNull);
+      expect(validator.validateLoginPassword('12345678'), isNull);
+    });
+  });
+
   group('Validator.validateName', () {
     test('rejects empty name and accepts non-empty name', () {
       expect(validator.validateName(''), 'Введите имя');

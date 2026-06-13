@@ -88,30 +88,6 @@ service cloud.firestore {
         && companyAllowsGuide(excursion.companyId);
     }
 
-    match /guideRequests/{requestId} {
-      allow read: if isAdmin()
-        || (isSignedIn() && requestId == request.auth.uid);
-
-      allow create: if hasEmail()
-        && requestId == request.auth.uid
-        && request.resource.data.keys().hasOnly([
-          'createdAt',
-          'email',
-          'name',
-          'status',
-          'uid'
-        ])
-        && request.resource.data.uid == request.auth.uid
-        && request.resource.data.email == userEmail()
-        && request.resource.data.name is string
-        && request.resource.data.name.size() >= 2
-        && request.resource.data.name.size() <= 100
-        && request.resource.data.status == 'pending'
-        && request.resource.data.createdAt == request.time;
-
-      allow update, delete: if isAdmin();
-    }
-
     match /guides/{guideId} {
       allow get: if isAdmin()
         || (isSignedIn() && guideId == request.auth.uid);

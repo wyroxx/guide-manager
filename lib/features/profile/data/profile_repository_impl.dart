@@ -9,12 +9,12 @@ final profileRepositoryProvider = Provider<ProfileRepository>((ref) {
   return ProfileRepositoryImpl(ref.watch(appLoggerProvider));
 });
 
-final profileDataProvider = FutureProvider<ProfileData?>((ref) async {
+final profileDataProvider = StreamProvider<ProfileData?>((ref) async* {
   final repository = ref.watch(profileRepositoryProvider);
   final logger = ref.watch(appLoggerProvider);
 
   try {
-    return await repository.getProfileData();
+    yield* repository.watchProfileData();
   } catch (error, stackTrace) {
     logger.error(
       'Profile',
@@ -39,32 +39,27 @@ class ProfileRepositoryImpl implements ProfileRepository {
   final AppLogger _logger;
 
   @override
-  Future<ProfileData?> getProfileData() async {
-    final email = _auth.currentUser?.email;
-
-    if (email == null || email.isEmpty) {
-      throw Exception('Пользователь не авторизован');
-    }
-
+  Stream<ProfileData?> watchProfileData() {
     final user = _auth.currentUser;
-    if (user == null) {
-      throw Exception('Пользователь не авторизован');
+    final email = user?.email;
+    if (user == null || email == null || email.isEmpty) {
+      return Stream.error(Exception('Пользователь не авторизован'));
     }
 
-    final doc = await _firestore.collection('guides').doc(user.uid).get();
+    return _firestore.collection('guides').doc(user.uid).snapshots().map((doc) {
+      if (!doc.exists) {
+        _logger.debug('Profile', 'Guide document does not exist');
+        return null;
+      }
 
-    if (!doc.exists) {
-      _logger.warning('Profile', 'Guide document does not exist');
-      return null;
-    }
+      final data = doc.data();
+      if (data == null || data['email'] != email) {
+        _logger.warning('Profile', 'Guide document has invalid ownership data');
+        return null;
+      }
 
-    final data = doc.data();
-    if (data == null || data['email'] != email) {
-      _logger.warning('Profile', 'Guide document has invalid ownership data');
-      return null;
-    }
-
-    _logger.debug('Profile', 'Profile loaded successfully');
-    return ProfileData.fromJson(<String, dynamic>{...data, 'id': doc.id});
+      _logger.debug('Profile', 'Profile loaded successfully');
+      return ProfileData.fromJson(<String, dynamic>{...data, 'id': doc.id});
+    });
   }
 }

@@ -9,6 +9,7 @@ import 'package:guide_manager/core/ui/snack_bar.dart';
 import 'package:guide_manager/features/applications/data/applications_repository_impl.dart';
 import 'package:guide_manager/features/applications/presentation/application_card.dart';
 import 'package:guide_manager/features/excursions/domain/excursion.dart';
+import 'package:guide_manager/features/profile/data/profile_repository_impl.dart';
 
 class ApplicationsPage extends ConsumerStatefulWidget {
   const ApplicationsPage({super.key});
@@ -23,8 +24,31 @@ class _ApplicationsPageState extends ConsumerState<ApplicationsPage> {
   @override
   Widget build(BuildContext context) {
     final tab = ref.watch(applicationsTabProvider);
+    final profileDataAsync = ref.watch(profileDataProvider);
     Widget content;
-    if (tab == ApplicationsTab.available) {
+
+    if (profileDataAsync.isLoading) {
+      content = const Expanded(
+        child: Center(child: CircularProgressIndicator()),
+      );
+    } else if (profileDataAsync.hasError) {
+      content = Expanded(
+        child: AppErrorState(
+          title: 'Не удалось проверить аккаунт',
+          onRetry: () {
+            ref.invalidate(profileDataProvider);
+          },
+        ),
+      );
+    } else if (profileDataAsync.value == null) {
+      content = const Expanded(
+        child: AppEmptyState(
+          assetPath: 'assets/images/empty_applications.svg',
+          title: 'Нет доступных экскурсий',
+          subtitle: 'Они появятся после одобрения аккаунта',
+        ),
+      );
+    } else if (tab == ApplicationsTab.available) {
       content = Expanded(
         child: ref
             .watch(availableExcursionsProvider)

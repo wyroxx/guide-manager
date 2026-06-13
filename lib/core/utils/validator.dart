@@ -34,6 +34,13 @@ class Validator {
     return null;
   }
 
+  String? validateLoginPassword(String? password) {
+    if ((password ?? '').isEmpty) {
+      return 'Введите пароль';
+    }
+    return null;
+  }
+
   String? validateName(String? name) {
     final value = name?.trim() ?? '';
     if (value.isEmpty) {

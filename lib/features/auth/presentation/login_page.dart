@@ -140,7 +140,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     AuthTextField(
                       controller: _passwordController,
                       hintText: 'Пароль',
-                      validator: ref.read(validatorProvider).validatePassword,
+                      validator: ref
+                          .read(validatorProvider)
+                          .validateLoginPassword,
                       obscureText: _obscurePassword,
                       textInputAction: TextInputAction.done,
                       prefixIcon: const Icon(Icons.lock_outline),
@@ -177,7 +179,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   Expanded(child: Divider(thickness: 2, color: colors.border)),
                   const SizedBox(width: 8),
                   Text(
-                    'Войти через',
+                    'Продолжить через',
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
                       color: colors.textPrimary,

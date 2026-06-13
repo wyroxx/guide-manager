@@ -41,13 +41,37 @@ class ProfilePage extends ConsumerWidget {
           ),
           data: (profileData) {
             if (profileData == null) {
-              return const AppEmptyState(
-                title: 'Профиль еще не заполнен',
-                subtitle:
-                    'Информация появится после добавления администратором',
-                assetPath: 'assets/images/empty_profile.svg',
-                padding: EdgeInsets.symmetric(horizontal: 12),
-                imageTitleSpacing: 16,
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Spacer(),
+                  const AppEmptyState(
+                    title: 'Профиль еще не заполнен',
+                    subtitle:
+                        'Информация появится после добавления администратором',
+                    assetPath: 'assets/images/empty_profile.svg',
+                    padding: EdgeInsets.symmetric(horizontal: 12),
+                    imageTitleSpacing: 16,
+                  ),
+                  const Spacer(),
+                  TextButton(
+                    onPressed: () async {
+                      final confirmed = await showAdaptiveConfirmationDialog(
+                        context,
+                        title: 'Выйти из аккаунта?',
+                        message:
+                            'Чтобы получить доступ вам нужно будет зайти повторно',
+                        confirmText: 'Выйти',
+                        cancelText: 'Отменить',
+                      );
+                      if (confirmed) {
+                        await ref.read(authRepositoryProvider).logout();
+                      }
+                    },
+                    child: const Text('Выйти из аккаунта'),
+                  ),
+                  const SizedBox(height: 12),
+                ],
               );
             }
             return LayoutBuilder(

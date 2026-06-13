@@ -6,6 +6,7 @@ import 'package:guide_manager/core/utils/date_formatter.dart';
 import 'package:guide_manager/features/excursions/data/excursions_repository_impl.dart';
 import 'package:guide_manager/features/excursions/presentation/widgets/calendar.dart';
 import 'package:guide_manager/features/excursions/presentation/widgets/excursion_card.dart';
+import 'package:guide_manager/features/profile/data/profile_repository_impl.dart';
 
 class ExcursionsPage extends ConsumerStatefulWidget {
   const ExcursionsPage({super.key});
@@ -19,7 +20,7 @@ class _ExcursionsPageState extends ConsumerState<ExcursionsPage> {
   @override
   Widget build(BuildContext context) {
     final provider = excursionsProvider(_selectedDate);
-    final excursionsAsync = ref.watch(provider);
+    final profileDataAsync = ref.watch(profileDataProvider);
     return Scaffold(
       appBar: AppBar(title: const Text('Мои экскурсии')),
       body: Column(
@@ -43,29 +44,51 @@ class _ExcursionsPageState extends ConsumerState<ExcursionsPage> {
             ),
           ),
           Expanded(
-            child: excursionsAsync.when(
-              skipLoadingOnRefresh: false,
-              data: (excursions) {
-                if (excursions.isEmpty) {
+            child: profileDataAsync.when(
+              data: (profileData) {
+                if (profileData == null) {
                   return const AppEmptyState(
-                    title: 'На этот день экскурсий нет',
+                    title: 'Экскурсии не найдены',
+                    subtitle: 'Они появятся после одобрения аккаунта',
                   );
                 }
 
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: ListView.separated(
-                    itemBuilder: (context, index) =>
-                        ExcursionCard(excursion: excursions[index]),
-                    separatorBuilder: (_, _) => const SizedBox(height: 10),
-                    itemCount: excursions.length,
-                  ),
-                );
+                return ref
+                    .watch(provider)
+                    .when(
+                      skipLoadingOnRefresh: false,
+                      data: (excursions) {
+                        if (excursions.isEmpty) {
+                          return const AppEmptyState(
+                            title: 'На этот день экскурсий нет',
+                          );
+                        }
+
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 24),
+                          child: ListView.separated(
+                            itemBuilder: (context, index) =>
+                                ExcursionCard(excursion: excursions[index]),
+                            separatorBuilder: (_, _) =>
+                                const SizedBox(height: 10),
+                            itemCount: excursions.length,
+                          ),
+                        );
+                      },
+                      error: (error, stackTrace) => AppErrorState(
+                        title: 'Не удалось загрузить экскурсии',
+                        onRetry: () {
+                          ref.invalidate(provider);
+                        },
+                      ),
+                      loading: () =>
+                          const Center(child: CircularProgressIndicator()),
+                    );
               },
               error: (error, stackTrace) => AppErrorState(
-                title: 'Не удалось загрузить экскурсии',
+                title: 'Не удалось проверить аккаунт',
                 onRetry: () {
-                  ref.invalidate(provider);
+                  ref.invalidate(profileDataProvider);
                 },
               ),
               loading: () => const Center(child: CircularProgressIndicator()),

@@ -9,25 +9,32 @@ import 'package:guide_manager/features/applications/domain/applications_reposito
 import 'package:guide_manager/features/excursions/domain/excursion.dart';
 import 'package:guide_manager/features/profile/data/profile_repository_impl.dart';
 
-final myApplicationsProvider = StreamProvider<List<Application>>((ref) {
+final myApplicationsProvider = StreamProvider<List<Application>>((ref) async* {
   final repository = ref.watch(applicationsRepositoryProvider);
   final logger = ref.watch(appLoggerProvider);
   final guideUid = FirebaseAuth.instance.currentUser?.uid;
   if (guideUid == null) {
-    return Stream.value(const <Application>[]);
+    yield const <Application>[];
+    return;
   }
-  return repository.watchMyApplications(guideUid: guideUid).handleError((
-    Object error,
-    StackTrace stackTrace,
-  ) {
+
+  try {
+    final profileData = await ref.watch(profileDataProvider.future);
+    if (profileData == null) {
+      yield const <Application>[];
+      return;
+    }
+
+    yield* repository.watchMyApplications(guideUid: guideUid);
+  } catch (error, stackTrace) {
     logger.error(
       'Applications',
       'Failed to watch guide applications',
       error: error,
       stackTrace: stackTrace,
     );
-    Error.throwWithStackTrace(error, stackTrace);
-  });
+    rethrow;
+  }
 });
 
 final availableExcursionsProvider = StreamProvider<List<Excursion>>((
