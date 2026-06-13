@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:guide_manager/app/theme.dart';
+import 'package:guide_manager/core/logging/app_logger.dart';
 import 'package:guide_manager/core/ui/snack_bar.dart';
 import 'package:guide_manager/core/utils/validator.dart';
 import 'package:guide_manager/features/auth/data/auth_repository_impl.dart';
@@ -139,7 +140,15 @@ class _ResetPasswordSheetState extends ConsumerState<ResetPasswordSheet> {
                                 message: e.message,
                                 type: AppToastType.error,
                               );
-                            } catch (_) {
+                            } catch (error, stackTrace) {
+                              ref
+                                  .read(appLoggerProvider)
+                                  .error(
+                                    'Auth',
+                                    'Unexpected password reset error',
+                                    error: error,
+                                    stackTrace: stackTrace,
+                                  );
                               if (!context.mounted) return;
                               showAppToast(
                                 context,

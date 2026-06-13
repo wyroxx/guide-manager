@@ -131,7 +131,9 @@ class StatusBadge extends StatelessWidget {
       ),
       child: Text(
         status.statusRus,
-        style: Theme.of(context).textTheme.titleSmall?.copyWith(fontSize: 14),
+        style: Theme.of(
+          context,
+        ).textTheme.titleSmall?.copyWith(fontSize: 14, color: Colors.white),
       ),
     );
   }

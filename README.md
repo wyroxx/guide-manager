@@ -91,7 +91,7 @@ companies/{companyId}
   phone: string
   banList: string[]
 
-guides/{guideId}
+guides/{guideUid}
   name: string
   email: string
   phone: string
@@ -215,13 +215,26 @@ flutter test
 
 ## Индексы Firestore
 
-Для текущих запросов могут понадобиться composite indexes:
+Правила и индексы хранятся в `firestore.rules` и
+`firestore.indexes.json`. Документ одобренного гида должен использовать
+Firebase Auth UID в качестве ID: `guides/{uid}`.
+
+Для текущих запросов настроены индексы:
 
 - `excursions`: `hasSpots` + `requiredLevels`
 - `excursions`: `assignedGuides` + `startDate`
-- `collectionGroup applications`: `email`
+- `collectionGroup applications`: `email` с collection-group scope
 
-Если индекс отсутствует, Firestore вернет ошибку со ссылкой на создание индекса.
+Деплой конфигурации:
+
+```sh
+firebase deploy --only firestore:rules,firestore:indexes
+```
+
+Административная запись требует custom claim `admin: true`. Клиент может
+читать только собственный профиль и заявки, а создавать заявку может только
+со статусом `pending` при подходящем уровне, наличии мест и отсутствии email в
+`banList` компании.
 
 ## Полезные команды
 

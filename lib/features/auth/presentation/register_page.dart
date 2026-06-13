@@ -63,7 +63,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
 
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:guide_manager/core/enums.dart';
+import 'package:guide_manager/core/logging/app_logger.dart';
 import 'package:guide_manager/features/applications/data/application.dart';
 import 'package:guide_manager/features/applications/domain/applications_repository.dart';
 import 'package:guide_manager/features/excursions/domain/excursion.dart';
@@ -9,17 +10,30 @@ import 'package:guide_manager/features/profile/data/profile_repository_impl.dart
 
 final myApplicationsProvider = StreamProvider<List<Excursion>>((ref) {
   final repository = ref.watch(applicationsRepositoryProvider);
+  final logger = ref.watch(appLoggerProvider);
   final email = FirebaseAuth.instance.currentUser?.email;
   if (email == null) {
     return Stream.value(const <Excursion>[]);
   }
-  return repository.watchMyApplications(guideEmail: email);
+  return repository.watchMyApplications(guideEmail: email).handleError((
+    Object error,
+    StackTrace stackTrace,
+  ) {
+    logger.error(
+      'Applications',
+      'Failed to watch guide applications',
+      error: error,
+      stackTrace: stackTrace,
+    );
+    Error.throwWithStackTrace(error, stackTrace);
+  });
 });
 
 final availableExcursionsProvider = StreamProvider<List<Excursion>>((
   ref,
 ) async* {
   final repository = ref.watch(applicationsRepositoryProvider);
+  final logger = ref.watch(appLoggerProvider);
   final email = FirebaseAuth.instance.currentUser?.email;
 
   if (email == null) {
@@ -27,29 +41,40 @@ final availableExcursionsProvider = StreamProvider<List<Excursion>>((
     return;
   }
 
-  final profileData = await ref.watch(profileDataProvider.future);
-  final level = profileData?.level;
+  try {
+    final profileData = await ref.watch(profileDataProvider.future);
+    final level = profileData?.level;
 
-  if (level == null) {
-    yield const <Excursion>[];
-    return;
+    if (level == null) {
+      yield const <Excursion>[];
+      return;
+    }
+
+    yield* repository.watchAvailableExcursions(
+      guideEmail: email,
+      guideLevel: level,
+    );
+  } catch (error, stackTrace) {
+    logger.error(
+      'Applications',
+      'Failed to watch available excursions',
+      error: error,
+      stackTrace: stackTrace,
+    );
+    rethrow;
   }
-
-  yield* repository.watchAvailableExcursions(
-    guideEmail: email,
-    guideLevel: level,
-  );
 });
 
 final applicationsRepositoryProvider = Provider<ApplicationsRepository>((ref) {
-  return ApplicationsRepositoryImpl();
+  return ApplicationsRepositoryImpl(ref.watch(appLoggerProvider));
 });
 
 class ApplicationsRepositoryImpl implements ApplicationsRepository {
-  ApplicationsRepositoryImpl({FirebaseFirestore? firestore})
+  ApplicationsRepositoryImpl(this._logger, {FirebaseFirestore? firestore})
     : _firestore = firestore ?? FirebaseFirestore.instance;
 
   final FirebaseFirestore _firestore;
+  final AppLogger _logger;
 
   @override
   Future<void> applyToExcursion({
@@ -67,7 +92,11 @@ class ApplicationsRepositoryImpl implements ApplicationsRepository {
         .doc(excursionId)
         .collection('applications')
         .doc(guideEmail)
-        .set(application.toJson());
+        .set({
+          ...application.toJson(),
+          'createdAt': FieldValue.serverTimestamp(),
+        });
+    _logger.info('Applications', 'Application submitted for $excursionId');
   }
 
   @override
@@ -91,36 +120,71 @@ class ApplicationsRepositoryImpl implements ApplicationsRepository {
         )
         .snapshots()
         .asyncMap((snapshot) async {
-          final excursions = <Excursion>[];
+          final relatedData = await Future.wait([
+            _loadAppliedExcursionIds(guideEmail),
+            _loadBlacklistedCompanyIds(guideEmail),
+          ]);
+          final appliedExcursionIds = relatedData.first;
+          final blacklistedCompanyIds = relatedData.last;
 
-          for (final document in snapshot.docs) {
-            final excursion = document.data();
-            if (excursion.assignedGuides.contains(guideEmail)) {
-              continue;
-            }
-
-            final application = await document.reference
-                .collection('applications')
-                .doc(guideEmail)
-                .get();
-            if (application.exists) {
-              continue;
-            }
-
-            final isBlacklisted = await _isGuideBlacklisted(
-              companyId: excursion.companyId,
-              guideEmail: guideEmail,
-            );
-            if (isBlacklisted) {
-              continue;
-            }
-
-            excursions.add(excursion);
-          }
+          final excursions = snapshot.docs
+              .map((document) => document.data())
+              .where(
+                (excursion) =>
+                    !excursion.assignedGuides.contains(guideEmail) &&
+                    !appliedExcursionIds.contains(excursion.id) &&
+                    !blacklistedCompanyIds.contains(excursion.companyId),
+              )
+              .toList();
 
           excursions.sort((a, b) => a.startDate.compareTo(b.startDate));
+          _logger.debug(
+            'Applications',
+            'Loaded ${excursions.length} available excursions',
+          );
           return excursions;
         });
+  }
+
+  Future<Set<String>> _loadAppliedExcursionIds(String guideEmail) async {
+    try {
+      final snapshot = await _firestore
+          .collectionGroup('applications')
+          .where('email', isEqualTo: guideEmail)
+          .get();
+
+      return snapshot.docs
+          .map((document) => document.reference.parent.parent?.id)
+          .whereType<String>()
+          .toSet();
+    } catch (error, stackTrace) {
+      _logger.error(
+        'Applications',
+        'Failed to query application collection group',
+        error: error,
+        stackTrace: stackTrace,
+      );
+      rethrow;
+    }
+  }
+
+  Future<Set<String>> _loadBlacklistedCompanyIds(String guideEmail) async {
+    try {
+      final snapshot = await _firestore
+          .collection('companies')
+          .where('banList', arrayContains: guideEmail)
+          .get();
+
+      return snapshot.docs.map((document) => document.id).toSet();
+    } catch (error, stackTrace) {
+      _logger.error(
+        'Applications',
+        'Failed to query blacklisted companies',
+        error: error,
+        stackTrace: stackTrace,
+      );
+      rethrow;
+    }
   }
 
   @override
@@ -134,20 +198,26 @@ class ApplicationsRepositoryImpl implements ApplicationsRepository {
             snapshot.docs.map(_excursionFromApplication),
           );
 
-          return excursions.whereType<Excursion>().toList()..sort((a, b) {
-            final applicationA = a.application!;
-            final applicationB = b.application!;
+          final result = excursions.whereType<Excursion>().toList()
+            ..sort((a, b) {
+              final applicationA = a.application!;
+              final applicationB = b.application!;
 
-            final statusCompare = applicationA.status.priority.compareTo(
-              applicationB.status.priority,
-            );
+              final statusCompare = applicationA.status.priority.compareTo(
+                applicationB.status.priority,
+              );
 
-            if (statusCompare != 0) {
-              return statusCompare;
-            }
+              if (statusCompare != 0) {
+                return statusCompare;
+              }
 
-            return applicationB.createdAt.compareTo(applicationA.createdAt);
-          });
+              return applicationB.createdAt.compareTo(applicationA.createdAt);
+            });
+          _logger.debug(
+            'Applications',
+            'Loaded ${result.length} guide applications',
+          );
+          return result;
         });
   }
 
@@ -172,20 +242,5 @@ class ApplicationsRepositoryImpl implements ApplicationsRepository {
       ...excursionData,
       'id': excursionReference.id,
     }).copyWith(application: Application.fromJson(applicationData));
-  }
-
-  Future<bool> _isGuideBlacklisted({
-    required String companyId,
-    required String guideEmail,
-  }) async {
-    if (companyId.isEmpty) {
-      return false;
-    }
-    final company = await _firestore
-        .collection('companies')
-        .doc(companyId)
-        .get();
-    final banList = company.data()?['banList'] as List<dynamic>? ?? [];
-    return banList.contains(guideEmail);
   }
 }

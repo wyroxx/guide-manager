@@ -106,7 +106,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -192,8 +192,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    height: 50,
-                    width: 50,
+                    height: 52,
+                    width: 52,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
@@ -221,8 +221,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   ),
                   const SizedBox(width: 36),
                   Container(
-                    height: 50,
-                    width: 50,
+                    height: 52,
+                    width: 52,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(

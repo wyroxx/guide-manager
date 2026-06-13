@@ -63,7 +63,6 @@ class DefaultFirebaseOptions {
     projectId: 'tourapp-66e02',
     storageBucket: 'tourapp-66e02.firebasestorage.app',
   );
-
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyCUElNAVky8lIcZLBDPKOdc-irdlMVVQKU',
     appId: '1:551338757670:ios:9316df14c8e662633ee0e7',

@@ -1,0 +1,44 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "excursions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "hasSpots",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "requiredLevels",
+          "arrayConfig": "CONTAINS"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "excursions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "assignedGuides",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "startDate",
+          "order": "ASCENDING"
+        }
+      ]
+    }
+  ],
+  "fieldOverrides": [
+    {
+      "collectionGroup": "applications",
+      "fieldPath": "email",
+      "indexes": [
+        {
+          "order": "ASCENDING",
+          "queryScope": "COLLECTION_GROUP"
+        }
+      ]
+    }
+  ]
+}

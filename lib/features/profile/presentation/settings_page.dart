@@ -192,6 +192,9 @@ class _ThemeModeOption extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
+          splashFactory: NoSplash.splashFactory,
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
           onTap: () => onTap(mode),
           borderRadius: BorderRadius.circular(AppRadius.sm),
           child: Padding(

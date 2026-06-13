@@ -92,7 +92,7 @@ abstract final class AppTheme {
           minimumSize: const Size(0, 46),
           backgroundColor: colors.primary,
           foregroundColor: Colors.white,
-          disabledBackgroundColor: colors.disabled,
+          disabledBackgroundColor: colors.primary,
           disabledForegroundColor: colors.textMuted,
           textStyle: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
           shape: RoundedRectangleBorder(
@@ -167,7 +167,11 @@ abstract final class AppTheme {
   static OutlineInputBorder _inputBorder(Color color) {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(AppRadius.input),
-      borderSide: BorderSide(color: color, width: 1.2),
+      borderSide: BorderSide(
+        color: color,
+        width: 1.2,
+        strokeAlign: BorderSide.strokeAlignOutside,
+      ),
     );
   }
 

@@ -2,12 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:guide_manager/core/enums.dart';
+import 'package:guide_manager/core/logging/app_logger.dart';
 import 'package:guide_manager/features/excursions/domain/excursion.dart';
 import 'package:guide_manager/features/excursions/domain/excursions_repository.dart';
 import 'package:guide_manager/features/profile/data/profile_repository_impl.dart';
 
 final excursionsRepositoryProvider = Provider<ExcursionsRepository>((ref) {
-  return ExcursionsRepositoryImpl();
+  return ExcursionsRepositoryImpl(ref.watch(appLoggerProvider));
 });
 
 final guideLevelProvider = FutureProvider<GuideLevel?>((ref) async {
@@ -20,6 +21,7 @@ final excursionsProvider = StreamProvider.family<List<Excursion>, DateTime>((
   date,
 ) async* {
   final repository = ref.watch(excursionsRepositoryProvider);
+  final logger = ref.watch(appLoggerProvider);
   final guideLevel = await ref.watch(guideLevelProvider.future);
 
   if (guideLevel == null) {
@@ -27,16 +29,30 @@ final excursionsProvider = StreamProvider.family<List<Excursion>, DateTime>((
     return;
   }
 
-  yield* repository.watchExcursions(date: date, guideLevel: guideLevel);
+  try {
+    yield* repository.watchExcursions(date: date, guideLevel: guideLevel);
+  } catch (error, stackTrace) {
+    logger.error(
+      'Excursions',
+      'Failed to watch assigned excursions',
+      error: error,
+      stackTrace: stackTrace,
+    );
+    rethrow;
+  }
 });
 
 class ExcursionsRepositoryImpl implements ExcursionsRepository {
-  ExcursionsRepositoryImpl({FirebaseFirestore? firestore, FirebaseAuth? auth})
-    : _firestore = firestore ?? FirebaseFirestore.instance,
-      _auth = auth ?? FirebaseAuth.instance;
+  ExcursionsRepositoryImpl(
+    this._logger, {
+    FirebaseFirestore? firestore,
+    FirebaseAuth? auth,
+  }) : _firestore = firestore ?? FirebaseFirestore.instance,
+       _auth = auth ?? FirebaseAuth.instance;
 
   final FirebaseAuth _auth;
   final FirebaseFirestore _firestore;
+  final AppLogger _logger;
 
   @override
   Stream<List<Excursion>> watchExcursions({
@@ -83,6 +99,10 @@ class ExcursionsRepositoryImpl implements ExcursionsRepository {
 
           excursions.sort((a, b) => a.startDate.compareTo(b.startDate));
 
+          _logger.debug(
+            'Excursions',
+            'Loaded ${excursions.length} assigned excursions',
+          );
           return excursions;
         });
   }

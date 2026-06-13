@@ -1,14 +1,19 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:guide_manager/core/logging/app_logger.dart';
 import 'package:guide_manager/features/auth/domain/auth_exception.dart';
 import 'package:guide_manager/features/auth/domain/auth_repository.dart';
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
-  return AuthRepositoryImpl();
+  return AuthRepositoryImpl(ref.watch(appLoggerProvider));
 });
 
 class AuthRepositoryImpl implements AuthRepository {
+  AuthRepositoryImpl(this._logger);
+
+  final AppLogger _logger;
+
   @override
   Future<void> login(String email, String password) async {
     try {
@@ -16,7 +21,9 @@ class AuthRepositoryImpl implements AuthRepository {
         email: email,
         password: password,
       );
-    } on FirebaseAuthException catch (e) {
+      _logger.info('Auth', 'Password sign-in succeeded');
+    } on FirebaseAuthException catch (e, stackTrace) {
+      _logFirebaseError('Password sign-in failed', e, stackTrace);
       throw AuthException(_mapFirebaseError(e));
     }
   }
@@ -28,7 +35,9 @@ class AuthRepositoryImpl implements AuthRepository {
         email: email,
         password: password,
       );
-    } on FirebaseAuthException catch (e) {
+      _logger.info('Auth', 'Account registration succeeded');
+    } on FirebaseAuthException catch (e, stackTrace) {
+      _logFirebaseError('Account registration failed', e, stackTrace);
       throw AuthException(_mapFirebaseError(e));
     }
   }
@@ -40,7 +49,9 @@ class AuthRepositoryImpl implements AuthRepository {
         FirebaseAuth.instance.signOut(),
         GoogleSignIn.instance.signOut(),
       ]);
-    } on FirebaseAuthException catch (e) {
+      _logger.info('Auth', 'Sign-out succeeded');
+    } on FirebaseAuthException catch (e, stackTrace) {
+      _logFirebaseError('Sign-out failed', e, stackTrace);
       throw AuthException(_mapFirebaseError(e));
     }
   }
@@ -66,9 +77,17 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<void> loginWithApple() async {
     try {
       await FirebaseAuth.instance.signInWithProvider(AppleAuthProvider());
-    } on FirebaseAuthException catch (e) {
+      _logger.info('Auth', 'Apple sign-in succeeded');
+    } on FirebaseAuthException catch (e, stackTrace) {
+      _logFirebaseError('Apple sign-in failed', e, stackTrace);
       throw AuthException(_mapFirebaseError(e));
-    } catch (_) {
+    } catch (error, stackTrace) {
+      _logger.error(
+        'Auth',
+        'Apple sign-in failed',
+        error: error,
+        stackTrace: stackTrace,
+      );
       throw AuthException('Не удалось войти через Apple');
     }
   }
@@ -87,14 +106,29 @@ class AuthRepositoryImpl implements AuthRepository {
       );
 
       await FirebaseAuth.instance.signInWithCredential(credential);
-    } on GoogleSignInException catch (e) {
+      _logger.info('Auth', 'Google sign-in succeeded');
+    } on GoogleSignInException catch (e, stackTrace) {
       if (e.code == GoogleSignInExceptionCode.canceled) {
+        _logger.info('Auth', 'Google sign-in canceled');
         throw AuthException('Вход через Google отменён');
       }
+      _logger.error(
+        'Auth',
+        'Google sign-in failed',
+        error: e,
+        stackTrace: stackTrace,
+      );
       throw AuthException('Не удалось войти через Google');
-    } on FirebaseAuthException catch (e) {
+    } on FirebaseAuthException catch (e, stackTrace) {
+      _logFirebaseError('Google Firebase sign-in failed', e, stackTrace);
       throw AuthException(_mapFirebaseError(e));
-    } catch (_) {
+    } catch (error, stackTrace) {
+      _logger.error(
+        'Auth',
+        'Google sign-in failed',
+        error: error,
+        stackTrace: stackTrace,
+      );
       throw AuthException('Не удалось войти через Google');
     }
   }
@@ -103,8 +137,23 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<void> sendResetPasswordEmail(String email) async {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-    } on FirebaseAuthException catch (e) {
+      _logger.info('Auth', 'Password reset email sent');
+    } on FirebaseAuthException catch (e, stackTrace) {
+      _logFirebaseError('Password reset request failed', e, stackTrace);
       throw AuthException(_mapFirebaseError(e));
     }
+  }
+
+  void _logFirebaseError(
+    String message,
+    FirebaseAuthException error,
+    StackTrace stackTrace,
+  ) {
+    _logger.error(
+      'Auth',
+      '$message (${error.code})',
+      error: error,
+      stackTrace: stackTrace,
+    );
   }
 }

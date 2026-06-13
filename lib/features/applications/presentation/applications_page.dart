@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:guide_manager/core/logging/app_logger.dart';
 import 'package:guide_manager/core/ui/empty_state.dart';
 import 'package:guide_manager/core/ui/error_state.dart';
 import 'package:guide_manager/core/ui/segmented_control.dart';
@@ -146,7 +147,15 @@ class _ApplicationsPageState extends ConsumerState<ApplicationsPage> {
         message: 'Заявка отправлена',
         type: AppToastType.success,
       );
-    } catch (_) {
+    } catch (error, stackTrace) {
+      ref
+          .read(appLoggerProvider)
+          .error(
+            'Applications',
+            'Failed to submit application for ${excursion.id}',
+            error: error,
+            stackTrace: stackTrace,
+          );
       if (!context.mounted) return;
       showAppToast(
         context,

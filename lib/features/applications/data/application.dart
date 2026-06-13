@@ -21,10 +21,14 @@ class Application {
     'createdAt': Timestamp.fromDate(createdAt),
   };
 
-  factory Application.fromJson(Map<String, dynamic> json) => Application(
-    email: json['email'] as String,
-    status: ApplicationStatus.fromString(json['status'] as String),
-    excursionId: json['excursionId'] as String,
-    createdAt: (json['createdAt'] as Timestamp).toDate(),
-  );
+  factory Application.fromJson(Map<String, dynamic> json) {
+    final createdAt = json['createdAt'] as Timestamp?;
+
+    return Application(
+      email: json['email'] as String,
+      status: ApplicationStatus.fromString(json['status'] as String),
+      excursionId: json['excursionId'] as String,
+      createdAt: createdAt?.toDate() ?? DateTime.now(),
+    );
+  }
 }
