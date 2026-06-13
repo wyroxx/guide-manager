@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:guide_manager/core/enums.dart';
-import 'package:guide_manager/features/applications/data/application.dart';
+import 'package:guide_manager/features/applications/domain/application.dart';
 import 'package:guide_manager/features/excursions/data/timestamp_converter.dart';
 
 part 'excursion.freezed.dart';

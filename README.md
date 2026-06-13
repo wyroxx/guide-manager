@@ -119,10 +119,14 @@ excursions/{excursionId}
   companyId: string
   assignedGuides: string[]
 
-excursions/{excursionId}/applications/{guideEmail}
+excursions/{excursionId}/applications/{guideUid}
   createdAt: timestamp
-  email: string
+  guideUid: string
+  guideEmail: string
   excursionId: string
+  excursionTitle: string
+  excursionStartDate: timestamp
+  excursionMaxParticipants: number
   status: "pending" | "accepted" | "rejected"
 ```
 
@@ -151,6 +155,19 @@ flutter pub get
 
 ```sh
 flutter run
+```
+
+## Android release signing
+
+Release-сборка требует отдельный production-keystore. Создайте его вне
+репозитория, затем скопируйте `android/key.properties.example` в
+`android/key.properties` и заполните реальные значения. Файлы
+`key.properties`, `*.jks` и `*.keystore` исключены из Git.
+
+Проверить release-сборку:
+
+```sh
+flutter build appbundle --release
 ```
 
 Сгенерировать Freezed/json_serializable файлы:
@@ -223,7 +240,7 @@ Firebase Auth UID в качестве ID: `guides/{uid}`.
 
 - `excursions`: `hasSpots` + `requiredLevels`
 - `excursions`: `assignedGuides` + `startDate`
-- `collectionGroup applications`: `email` с collection-group scope
+- `collectionGroup applications`: `guideUid` с collection-group scope
 
 Деплой конфигурации:
 

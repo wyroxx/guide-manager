@@ -3,19 +3,20 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:guide_manager/core/enums.dart';
 import 'package:guide_manager/core/logging/app_logger.dart';
-import 'package:guide_manager/features/applications/data/application.dart';
+import 'package:guide_manager/features/applications/data/application_dto.dart';
+import 'package:guide_manager/features/applications/domain/application.dart';
 import 'package:guide_manager/features/applications/domain/applications_repository.dart';
 import 'package:guide_manager/features/excursions/domain/excursion.dart';
 import 'package:guide_manager/features/profile/data/profile_repository_impl.dart';
 
-final myApplicationsProvider = StreamProvider<List<Excursion>>((ref) {
+final myApplicationsProvider = StreamProvider<List<Application>>((ref) {
   final repository = ref.watch(applicationsRepositoryProvider);
   final logger = ref.watch(appLoggerProvider);
-  final email = FirebaseAuth.instance.currentUser?.email;
-  if (email == null) {
-    return Stream.value(const <Excursion>[]);
+  final guideUid = FirebaseAuth.instance.currentUser?.uid;
+  if (guideUid == null) {
+    return Stream.value(const <Application>[]);
   }
-  return repository.watchMyApplications(guideEmail: email).handleError((
+  return repository.watchMyApplications(guideUid: guideUid).handleError((
     Object error,
     StackTrace stackTrace,
   ) {
@@ -34,9 +35,10 @@ final availableExcursionsProvider = StreamProvider<List<Excursion>>((
 ) async* {
   final repository = ref.watch(applicationsRepositoryProvider);
   final logger = ref.watch(appLoggerProvider);
-  final email = FirebaseAuth.instance.currentUser?.email;
+  final user = FirebaseAuth.instance.currentUser;
+  final email = user?.email;
 
-  if (email == null) {
+  if (user == null || email == null) {
     yield const <Excursion>[];
     return;
   }
@@ -51,6 +53,7 @@ final availableExcursionsProvider = StreamProvider<List<Excursion>>((
     }
 
     yield* repository.watchAvailableExcursions(
+      guideUid: user.uid,
       guideEmail: email,
       guideLevel: level,
     );
@@ -78,29 +81,47 @@ class ApplicationsRepositoryImpl implements ApplicationsRepository {
 
   @override
   Future<void> applyToExcursion({
-    required String excursionId,
+    required Excursion excursion,
+    required String guideUid,
     required String guideEmail,
   }) async {
     final application = Application(
-      email: guideEmail,
+      guideUid: guideUid,
+      guideEmail: guideEmail,
       status: ApplicationStatus.pending,
       createdAt: DateTime.now(),
-      excursionId: excursionId,
+      excursionId: excursion.id,
+      excursionTitle: excursion.title,
+      excursionStartDate: excursion.startDate,
+      excursionMaxParticipants: excursion.maxParticipants,
     );
-    await _firestore
+    final applicationReference = _firestore
         .collection('excursions')
-        .doc(excursionId)
+        .doc(excursion.id)
         .collection('applications')
-        .doc(guideEmail)
-        .set({
-          ...application.toJson(),
-          'createdAt': FieldValue.serverTimestamp(),
-        });
-    _logger.info('Applications', 'Application submitted for $excursionId');
+        .doc(guideUid);
+
+    await _firestore.runTransaction((transaction) async {
+      final existingApplication = await transaction.get(applicationReference);
+      if (existingApplication.exists) {
+        _logger.info(
+          'Applications',
+          'Application already exists for ${excursion.id}',
+        );
+        return;
+      }
+
+      transaction.set(applicationReference, {
+        ...ApplicationDto.toJson(application),
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+    });
+    _logger.info('Applications', 'Application submitted for ${excursion.id}');
   }
 
   @override
   Stream<List<Excursion>> watchAvailableExcursions({
+    required String guideUid,
     required String guideEmail,
     required GuideLevel guideLevel,
   }) {
@@ -121,7 +142,7 @@ class ApplicationsRepositoryImpl implements ApplicationsRepository {
         .snapshots()
         .asyncMap((snapshot) async {
           final relatedData = await Future.wait([
-            _loadAppliedExcursionIds(guideEmail),
+            _loadAppliedExcursionIds(guideUid),
             _loadBlacklistedCompanyIds(guideEmail),
           ]);
           final appliedExcursionIds = relatedData.first;
@@ -146,11 +167,11 @@ class ApplicationsRepositoryImpl implements ApplicationsRepository {
         });
   }
 
-  Future<Set<String>> _loadAppliedExcursionIds(String guideEmail) async {
+  Future<Set<String>> _loadAppliedExcursionIds(String guideUid) async {
     try {
       final snapshot = await _firestore
           .collectionGroup('applications')
-          .where('email', isEqualTo: guideEmail)
+          .where('guideUid', isEqualTo: guideUid)
           .get();
 
       return snapshot.docs
@@ -188,59 +209,38 @@ class ApplicationsRepositoryImpl implements ApplicationsRepository {
   }
 
   @override
-  Stream<List<Excursion>> watchMyApplications({required String guideEmail}) {
+  Stream<List<Application>> watchMyApplications({required String guideUid}) {
     return _firestore
         .collectionGroup('applications')
-        .where('email', isEqualTo: guideEmail)
+        .where('guideUid', isEqualTo: guideUid)
         .snapshots()
-        .asyncMap((snapshot) async {
-          final excursions = await Future.wait(
-            snapshot.docs.map(_excursionFromApplication),
-          );
+        .map((snapshot) {
+          final applications = <Application>[];
+          for (final document in snapshot.docs) {
+            final excursionId = document.reference.parent.parent?.id;
+            if (excursionId == null) {
+              continue;
+            }
 
-          final result = excursions.whereType<Excursion>().toList()
-            ..sort((a, b) {
-              final applicationA = a.application!;
-              final applicationB = b.application!;
+            final applicationData = Map<String, dynamic>.from(document.data());
+            applicationData['excursionId'] ??= excursionId;
+            applications.add(ApplicationDto.fromJson(applicationData));
+          }
 
-              final statusCompare = applicationA.status.priority.compareTo(
-                applicationB.status.priority,
-              );
-
-              if (statusCompare != 0) {
-                return statusCompare;
-              }
-
-              return applicationB.createdAt.compareTo(applicationA.createdAt);
-            });
+          applications.sort((a, b) {
+            final statusCompare = a.status.priority.compareTo(
+              b.status.priority,
+            );
+            if (statusCompare != 0) {
+              return statusCompare;
+            }
+            return b.createdAt.compareTo(a.createdAt);
+          });
           _logger.debug(
             'Applications',
-            'Loaded ${result.length} guide applications',
+            'Loaded ${applications.length} guide applications',
           );
-          return result;
+          return applications;
         });
-  }
-
-  Future<Excursion?> _excursionFromApplication(
-    QueryDocumentSnapshot<Map<String, dynamic>> document,
-  ) async {
-    final excursionReference = document.reference.parent.parent;
-    if (excursionReference == null) {
-      return null;
-    }
-
-    final applicationData = Map<String, dynamic>.from(document.data());
-    applicationData['excursionId'] ??= excursionReference.id;
-
-    final excursionSnapshot = await excursionReference.get();
-    final excursionData = excursionSnapshot.data();
-    if (excursionData == null) {
-      return null;
-    }
-
-    return Excursion.fromJson({
-      ...excursionData,
-      'id': excursionReference.id,
-    }).copyWith(application: Application.fromJson(applicationData));
   }
 }

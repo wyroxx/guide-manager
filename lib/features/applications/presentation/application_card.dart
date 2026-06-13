@@ -2,17 +2,49 @@ import 'package:flutter/material.dart';
 import 'package:guide_manager/app/theme.dart';
 import 'package:guide_manager/core/enums.dart';
 import 'package:guide_manager/core/utils/date_formatter.dart';
+import 'package:guide_manager/features/applications/domain/application.dart';
 import 'package:guide_manager/features/excursions/domain/excursion.dart';
 
 class ApplicationCard extends StatelessWidget {
   const ApplicationCard({
     super.key,
-    required this.excursion,
+    required this.title,
+    required this.startDate,
+    required this.maxParticipants,
+    this.status,
     this.onApply,
     this.isLoading = false,
   });
 
-  final Excursion excursion;
+  factory ApplicationCard.available({
+    Key? key,
+    required Excursion excursion,
+    required VoidCallback onApply,
+    bool isLoading = false,
+  }) => ApplicationCard(
+    key: key,
+    title: excursion.title,
+    startDate: excursion.startDate,
+    maxParticipants: excursion.maxParticipants,
+    onApply: onApply,
+    isLoading: isLoading,
+  );
+
+  factory ApplicationCard.submitted({
+    Key? key,
+    required Application application,
+  }) => ApplicationCard(
+    key: key,
+    title: application.excursionTitle,
+    startDate: application.excursionStartDate,
+    maxParticipants: application.excursionMaxParticipants,
+    status: application.status,
+  );
+
+  final String title;
+  final DateTime startDate;
+  final int maxParticipants;
+  final ApplicationStatus? status;
   final VoidCallback? onApply;
   final bool isLoading;
 
@@ -34,14 +66,14 @@ class ApplicationCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      excursion.title,
+                      title,
                       style: Theme.of(context).textTheme.titleSmall,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                     ),
                     const SizedBox(height: 3),
                     Text(
-                      '${formatDate(excursion.startDate)} ${formatTime(excursion.startDate)}, ${excursion.maxParticipants} чел.',
+                      '${formatDate(startDate)} ${formatTime(startDate)}, $maxParticipants чел.',
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ],
@@ -49,7 +81,7 @@ class ApplicationCard extends StatelessWidget {
               ),
               const SizedBox(width: 14),
               onApply == null
-                  ? StatusBadge(status: excursion.application!.status)
+                  ? StatusBadge(status: status!)
                   : FilledButton(
                       onPressed: isLoading ? null : onApply,
                       style: FilledButton.styleFrom(

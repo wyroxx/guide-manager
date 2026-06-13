@@ -35,7 +35,7 @@ service cloud.firestore {
 
     function hasOwnApplication(excursionId) {
       return exists(
-        /databases/$(database)/documents/excursions/$(excursionId)/applications/$(userEmail())
+        /databases/$(database)/documents/excursions/$(excursionId)/applications/$(request.auth.uid)
       );
     }
 
@@ -63,15 +63,23 @@ service cloud.firestore {
       ).data;
 
       return isApprovedGuide()
-        && applicationId == userEmail()
+        && applicationId == request.auth.uid
         && request.resource.data.keys().hasOnly([
           'createdAt',
-          'email',
           'excursionId',
+          'excursionMaxParticipants',
+          'excursionStartDate',
+          'excursionTitle',
+          'guideEmail',
+          'guideUid',
           'status'
         ])
-        && request.resource.data.email == userEmail()
+        && request.resource.data.guideUid == request.auth.uid
+        && request.resource.data.guideEmail == userEmail()
         && request.resource.data.excursionId == excursionId
+        && request.resource.data.excursionTitle == excursion.title
+        && request.resource.data.excursionStartDate == excursion.startDate
+        && request.resource.data.excursionMaxParticipants == excursion.maxParticipants
         && request.resource.data.status == 'pending'
         && request.resource.data.createdAt == request.time
         && excursion.hasSpots == true
@@ -126,10 +134,15 @@ service cloud.firestore {
       allow create, update, delete: if isAdmin();
 
       match /applications/{applicationId} {
-        allow read: if isAdmin()
+        allow get: if isAdmin()
           || (
             isApprovedGuide()
-            && resource.data.email == userEmail()
+            && applicationId == request.auth.uid
+          );
+        allow list: if isAdmin()
+          || (
+            isApprovedGuide()
+            && resource.data.guideUid == request.auth.uid
           );
         allow create: if validApplicationCreate(excursionId, applicationId);
         allow update, delete: if isAdmin();
@@ -140,7 +153,7 @@ service cloud.firestore {
       allow read: if isAdmin()
         || (
           isApprovedGuide()
-          && resource.data.email == userEmail()
+          && resource.data.guideUid == request.auth.uid
         );
     }
 

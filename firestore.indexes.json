@@ -32,7 +32,7 @@
   "fieldOverrides": [
     {
       "collectionGroup": "applications",
-      "fieldPath": "email",
+      "fieldPath": "guideUid",
       "indexes": [
         {
           "order": "ASCENDING",

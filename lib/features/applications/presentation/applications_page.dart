@@ -38,7 +38,7 @@ class _ApplicationsPageState extends ConsumerState<ApplicationsPage> {
                   );
                 }
                 return ListView.separated(
-                  itemBuilder: (context, index) => ApplicationCard(
+                  itemBuilder: (context, index) => ApplicationCard.available(
                     excursion: excursions[index],
                     isLoading: _submittingExcursionIds.contains(
                       excursions[index].id,
@@ -75,7 +75,7 @@ class _ApplicationsPageState extends ConsumerState<ApplicationsPage> {
                 }
                 return ListView.separated(
                   itemBuilder: (context, index) =>
-                      ApplicationCard(excursion: excursions[index]),
+                      ApplicationCard.submitted(application: excursions[index]),
                   separatorBuilder: (_, _) => const SizedBox(height: 10),
                   itemCount: excursions.length,
                 );
@@ -119,8 +119,9 @@ class _ApplicationsPageState extends ConsumerState<ApplicationsPage> {
   ) async {
     if (_submittingExcursionIds.contains(excursion.id)) return;
 
-    final email = FirebaseAuth.instance.currentUser?.email;
-    if (email == null || email.isEmpty) {
+    final user = FirebaseAuth.instance.currentUser;
+    final email = user?.email;
+    if (user == null || email == null || email.isEmpty) {
       showAppToast(
         context,
         message: 'Пользователь не авторизован',
@@ -136,7 +137,11 @@ class _ApplicationsPageState extends ConsumerState<ApplicationsPage> {
     try {
       await ref
           .read(applicationsRepositoryProvider)
-          .applyToExcursion(excursionId: excursion.id, guideEmail: email);
+          .applyToExcursion(
+            excursion: excursion,
+            guideUid: user.uid,
+            guideEmail: email,
+          );
 
       ref.invalidate(availableExcursionsProvider);
       ref.invalidate(myApplicationsProvider);
@@ -152,7 +157,8 @@ class _ApplicationsPageState extends ConsumerState<ApplicationsPage> {
           .read(appLoggerProvider)
           .error(
             'Applications',
-            'Failed to submit application for ${excursion.id}',
+            'Failed to submit application for ${excursion.id} '
+                '(company: ${excursion.companyId})',
             error: error,
             stackTrace: stackTrace,
           );
