@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -29,16 +30,27 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<void> register(String email, String password) async {
+  Future<void> register(String name, String email, String password) async {
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      final credential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
       _logger.info('Auth', 'Account registration succeeded');
+      final user = credential.user;
+      if (user == null) {
+        throw AuthException('Не удалось создать пользователя');
+      }
+      await _ensureGuideRequest(user, preferredName: name);
     } on FirebaseAuthException catch (e, stackTrace) {
       _logFirebaseError('Account registration failed', e, stackTrace);
       throw AuthException(_mapFirebaseError(e));
+    } catch (error, stackTrace) {
+      _logger.error(
+        'Auth',
+        'Guide request creation failed',
+        error: error,
+        stackTrace: stackTrace,
+      );
+      throw AuthException('Не удалось отправить заявку на регистрацию');
     }
   }
 
@@ -76,7 +88,14 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<void> loginWithApple() async {
     try {
-      await FirebaseAuth.instance.signInWithProvider(AppleAuthProvider());
+      final credential = await FirebaseAuth.instance.signInWithProvider(
+        AppleAuthProvider(),
+      );
+      final user = credential.user;
+      if (user == null) {
+        throw AuthException('Не удалось получить данные пользователя');
+      }
+      await _ensureGuideRequest(user);
       _logger.info('Auth', 'Apple sign-in succeeded');
     } on FirebaseAuthException catch (e, stackTrace) {
       _logFirebaseError('Apple sign-in failed', e, stackTrace);
@@ -105,7 +124,14 @@ class AuthRepositoryImpl implements AuthRepository {
         idToken: googleAuth.idToken,
       );
 
-      await FirebaseAuth.instance.signInWithCredential(credential);
+      final userCredential = await FirebaseAuth.instance.signInWithCredential(
+        credential,
+      );
+      final user = userCredential.user;
+      if (user == null) {
+        throw AuthException('Не удалось получить данные пользователя');
+      }
+      await _ensureGuideRequest(user, preferredName: googleUser.displayName);
       _logger.info('Auth', 'Google sign-in succeeded');
     } on GoogleSignInException catch (e, stackTrace) {
       if (e.code == GoogleSignInExceptionCode.canceled) {
@@ -142,6 +168,53 @@ class AuthRepositoryImpl implements AuthRepository {
       _logFirebaseError('Password reset request failed', e, stackTrace);
       throw AuthException(_mapFirebaseError(e));
     }
+  }
+
+  Future<void> _ensureGuideRequest(User user, {String? preferredName}) async {
+    final guideReference = FirebaseFirestore.instance
+        .collection('guides')
+        .doc(user.uid);
+
+    await FirebaseFirestore.instance.runTransaction((transaction) async {
+      final guideSnapshot = await transaction.get(guideReference);
+      if (guideSnapshot.exists) {
+        return;
+      }
+
+      final email = user.email;
+      if (email == null || email.isEmpty) {
+        throw AuthException('Провайдер не передал email пользователя');
+      }
+
+      transaction.set(guideReference, {
+        'uid': user.uid,
+        'email': email,
+        'name': _guideName(preferredName ?? user.displayName, email),
+        'isApproved': false,
+        'level': '',
+        'phone': '',
+        'toursCount': 0,
+        'avatar': '',
+        'bio': '',
+        'telegramAlias': '',
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+    });
+  }
+
+  String _guideName(String? preferredName, String email) {
+    final name = preferredName?.trim() ?? '';
+    if (name.isNotEmpty) {
+      return name.length <= 100 ? name : name.substring(0, 100);
+    }
+
+    final emailName = email.split('@').first.trim();
+    if (emailName.isNotEmpty) {
+      return emailName.length <= 100 ? emailName : emailName.substring(0, 100);
+    }
+
+    return 'Новый гид';
   }
 
   void _logFirebaseError(

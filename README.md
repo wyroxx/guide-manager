@@ -92,12 +92,15 @@ companies/{companyId}
   banList: string[]
 
 guides/{guideUid}
+  uid: string
+  isApproved: boolean
   name: string
   email: string
   phone: string
   level: "trainee" | "junior" | "middle" | "senior"
   toursCount: number
   createdAt: timestamp
+  updatedAt: timestamp
   bio: string
   avatar: string
   telegramAlias: string
@@ -233,8 +236,9 @@ flutter test
 ## Индексы Firestore
 
 Правила и индексы хранятся в `firestore.rules` и
-`firestore.indexes.json`. Документ одобренного гида должен использовать
-Firebase Auth UID в качестве ID: `guides/{uid}`.
+`firestore.indexes.json`. Документ заявки/профиля гида должен использовать
+Firebase Auth UID в качестве ID: `guides/{uid}`. Доступ к экскурсиям и заявкам
+получают только документы с `isApproved: true`.
 
 Для текущих запросов настроены индексы:
 

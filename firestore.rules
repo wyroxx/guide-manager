@@ -30,7 +30,41 @@ service cloud.firestore {
       return hasEmail()
         && exists(guidePath())
         && get(guidePath()).data.email == userEmail()
+        && get(guidePath()).data.isApproved == true
         && isGuideLevel(get(guidePath()).data.level);
+    }
+
+    function validGuideRequestCreate(guideId) {
+      return hasEmail()
+        && guideId == request.auth.uid
+        && request.resource.data.keys().hasOnly([
+          'avatar',
+          'bio',
+          'createdAt',
+          'email',
+          'isApproved',
+          'level',
+          'name',
+          'phone',
+          'telegramAlias',
+          'toursCount',
+          'uid',
+          'updatedAt'
+        ])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.email == userEmail()
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.name.size() <= 100
+        && request.resource.data.isApproved == false
+        && request.resource.data.level == ''
+        && request.resource.data.phone == ''
+        && request.resource.data.toursCount == 0
+        && request.resource.data.avatar == ''
+        && request.resource.data.bio == ''
+        && request.resource.data.telegramAlias == ''
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.updatedAt == request.time;
     }
 
     function hasOwnApplication(excursionId) {
@@ -92,7 +126,8 @@ service cloud.firestore {
       allow get: if isAdmin()
         || (isSignedIn() && guideId == request.auth.uid);
       allow list: if isAdmin();
-      allow create, update, delete: if isAdmin();
+      allow create: if isAdmin() || validGuideRequestCreate(guideId);
+      allow update, delete: if isAdmin();
     }
 
     match /companies/{companyId} {

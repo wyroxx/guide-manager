@@ -25,7 +25,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
   bool _obscurePassword = true;
   bool _isSubmitting = false;
 
-  Future<void> _register(String email, String password) async {
+  Future<void> _register(String name, String email, String password) async {
     if (_isSubmitting) return;
     final bool isValid = _formKey.currentState?.validate() ?? false;
     if (!isValid) return;
@@ -35,7 +35,9 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
     });
 
     try {
-      await ref.read(authRepositoryProvider).register(email.trim(), password);
+      await ref
+          .read(authRepositoryProvider)
+          .register(name.trim(), email.trim(), password);
     } on AuthException catch (e) {
       if (mounted) {
         showAppToast(context, message: e.message, type: AppToastType.error);
@@ -128,6 +130,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                       onPressed: _isSubmitting
                           ? null
                           : () async => await _register(
+                              _nameController.text,
                               _emailController.text,
                               _passwordController.text,
                             ),

@@ -58,6 +58,11 @@ class ProfileRepositoryImpl implements ProfileRepository {
         return null;
       }
 
+      if (data['isApproved'] != true) {
+        _logger.debug('Profile', 'Guide account is not approved');
+        return null;
+      }
+
       _logger.debug('Profile', 'Profile loaded successfully');
       return ProfileData.fromJson(<String, dynamic>{...data, 'id': doc.id});
     });

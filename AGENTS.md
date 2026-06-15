@@ -53,7 +53,7 @@ Auth: the app has login and register pages with proper validation of text fields
 
 ## Firebase
 
-Firestore contains three collections: `companies`, `guides` and `excursions`. Collection `companies` stores address, email, name, phone and banList - list with banned guides' emails. Collection `excursions` stores excursion-related data and may have subcollection `applications` with documents where each document is named with applied user email, the document contains `createdAt`, `email` and `status` (pending, accepted, rejected). Collection `guides` has all approved guides and user data for each guide.
+Firestore contains three collections: `companies`, `guides` and `excursions`. Collection `companies` stores address, email, name, phone and banList - list with banned guides' emails. Collection `excursions` stores excursion-related data and may have subcollection `applications` with documents where each document is named with applied user email, the document contains `createdAt`, `email` and `status` (pending, accepted, rejected). Collection `guides` stores guide access requests and approved guide profiles. Field `isApproved` controls whether the user has access to protected app data.
 
 ```js
 companies/{docId}
@@ -81,18 +81,21 @@ excursions/{docId}
   companyId: string
   assignedGuides: string[]
 
-excursions/{excursionId}/applications/{guideEmail}
+excursions/{excursionId}/applications/{userUid}
   createdAt: timestamp
   email: string
   status: "pending" | "accepted" | "rejected"
 
-guides/{docId}
+guides/{userUid}
+  uid: string
+  isApproved: boolean // true - has full access
   name: string
   email: string
   phone: string
   level: string
   toursCount: number
   createdAt: timestamp
+  updatedAt: timestamp
   bio: string
   avatar: string // avatar url
   telegramAlias: string
