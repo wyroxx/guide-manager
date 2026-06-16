@@ -2,6 +2,14 @@
   "projects": {
     "staging": "tourapp-66e02"
   },
-  "targets": {},
+  "targets": {
+    "tourapp-66e02": {
+      "hosting": {
+        "guides": [
+          "traveltech-guides"
+        ]
+      }
+    }
+  },
   "etags": {}
 }
