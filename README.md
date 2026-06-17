@@ -5,9 +5,9 @@
 
 Проект сделан как часть full-product связки:
 
-Flutter client → [Guide Manager](https://github.com/wyroxx/guide-manager)
-Admin panel → [Guide Manager Admin](https://github.com/wyroxx/guide-manager-admin)
-Backend → Firebase Authentication + Cloud Firestore
+- Flutter client → [Guide Manager](https://github.com/wyroxx/guide-manager)
+- Admin panel → [Guide Manager Admin](https://github.com/wyroxx/guide-manager-admin)
+- Backend → Firebase Authentication + Cloud Firestore
 
 Админская панель управляет компаниями, гидами, экскурсиями и заявками. Flutter-клиент использует те же Firestore-данные и security rules.
 
